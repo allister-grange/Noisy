@@ -5,6 +5,7 @@ import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
 import BottomSheet from '../components/BottomSheet';
 import { tileData } from '../helpers/TileData';
+import TrackPlayer from 'react-native-track-player';
 
 export default function HomeScreen() {
 
@@ -20,7 +21,7 @@ export default function HomeScreen() {
     }
 
     const loadSoundFiles = async () => {
-        // setLoadedAudioFiles(false);
+        setLoadedAudioFiles(false);
         
         // const soundFilesPath: Dictionary<AVPlaybackSource>  = {
         //     campfire: require('./../../assets/sounds/campfire.mp3'),
@@ -52,7 +53,26 @@ export default function HomeScreen() {
         // }));
                 
         // setSoundFiles(loadedSoundFiles);
-        setLoadedAudioFiles(true);
+        
+
+	const start = async () => {
+   	 // Set up the player
+    	await TrackPlayer.setupPlayer();
+
+   	 // Add a track to the queue
+   	 await TrackPlayer.add({
+       	 id: 'trackId',
+       	 url: require('./../../assets/sounds/thunderstorm.mp3'),
+       	 title: 'Track Title',
+       	 artist: 'Track Artist'
+    	});
+
+   	 // Start playing it
+   	 await TrackPlayer.play();
+	};
+	start();
+
+	setLoadedAudioFiles(true);
     };
 
     useEffect(() => {
