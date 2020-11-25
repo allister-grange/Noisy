@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View, StatusBar} from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View, StatusBar } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
 import BottomSheet from '../components/BottomSheet';
 import { tileData } from '../helpers/TileData';
+import Sound from "react-native-sound";
 
 export default function HomeScreen() {
 
@@ -21,37 +22,61 @@ export default function HomeScreen() {
 
     const loadSoundFiles = async () => {
         // setLoadedAudioFiles(false);
-        
+
         // const soundFilesPath: Dictionary<AVPlaybackSource>  = {
-        //     campfire: require('./../../assets/sounds/campfire.mp3'),
-        //     car: require('./../../assets/sounds/car.mp3'),
-        //     crickets: require('./../../assets/sounds/crickets.mp3'),
-        //     fan: require('./../../assets/sounds/fan.mp3'),
-        //     forest: require('./../../assets/sounds/forest.mp3'),
-        //     guitar: require('./../../assets/sounds/guitar.mp3'),
-        //     leaf: require('./../../assets/sounds/leaf.mp3'),
-        //     office: require('./../../assets/sounds/office.mp3'),
-        //     piano: require('./../../assets/sounds/piano.mp3'),
-        //     rain: require('./../../assets/sounds/rain.mp3'),
-        //     river: require('./../../assets/sounds/river.mp3'),
-        //     thunderstorm: require('./../../assets/sounds/thunderstorm.mp3'),
-        //     train: require('./../../assets/sounds/train.mp3'),
-        //     white: require('./../../assets/sounds/white.mp3'),
-        //     wind: require('./../../assets/sounds/wind.mp3'),
+        //     campfire: require('../../assets/sounds/campfire.mp3'),
+        //     car: require('../../assets/sounds/car.mp3'),
+        //     crickets: require('../../assets/sounds/crickets.mp3'),
+        //     fan: require('../../assets/sounds/fan.mp3'),
+        //     forest: require('../../assets/sounds/forest.mp3'),
+        //     guitar: require('../../assets/sounds/guitar.mp3'),
+        //     leaf: require('../../assets/sounds/leaf.mp3'),
+        //     office: require('../../assets/sounds/office.mp3'),
+        //     piano: require('../../assets/sounds/piano.mp3'),
+        //     rain: require('../../assets/sounds/rain.mp3'),
+        //     river: require('../../assets/sounds/river.mp3'),
+        //     thunderstorm: require('../../assets/sounds/thunderstorm.mp3'),
+        //     train: require('../../assets/sounds/train.mp3'),
+        //     white: require('../../assets/sounds/white.mp3'),
+        //     wind: require('../../assets/sounds/wind.mp3'),
         // };
 
         // let loadedSoundFiles: Dictionary<Audio.Sound> = {};
 
         // await Promise.all (tileData.map(async (tile) => {
-            
+
         //     const soundObject = new Audio.Sound();
         //     const loadedSoundFile = soundFilesPath[tile.name]
         //     await soundObject.loadAsync(loadedSoundFile);
-            
+
         //     loadedSoundFiles[tile.name] = soundObject
         // }));
-                
+
         // setSoundFiles(loadedSoundFiles);
+
+        console.log("hellooo");
+        
+        var whoosh = new Sound(require('../../assets/sounds/campfire.mp3'), (error) => {
+            if (error) {
+                console.log('failed to load the sound', error);
+                return;
+            }
+            // loaded successfully
+            console.log("I am in");
+            
+            console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+
+            // Play the sound with an onEnd callback
+            whoosh.play((success) => {
+                if (success) {
+                    console.log('successfully finished playing');
+                } else {
+                    console.log('playback failed due to audio decoding errors');
+                }
+            });
+        });
+        console.log("goodbye");
+
         setLoadedAudioFiles(true);
     };
 
@@ -63,10 +88,10 @@ export default function HomeScreen() {
     const containerTheme = isDarkMode ? GlobalStyles.darkThemeContainer : GlobalStyles.lightThemeContainer;
 
     const renderTile = (tile: any) => {
-    
+
         const soundObject = {}
         // const soundObject = soundFiles[tile.item.name]
-        
+
         return (<SoundTile name={tile.item.name} isDarkMode={isDarkMode}
             darkThemeColor={tile.item.darkThemeColor}
             lightThemeColor={tile.item.lightThemeColor}
@@ -80,15 +105,15 @@ export default function HomeScreen() {
 
             <View style={{ width: '100%', height: '100%' }}>
                 {
-                
-                loadedAudioFiles && <FlatList
-                    scrollEnabled={false}
-                    data={tileData}
-                    renderItem={renderTile}
-                    keyExtractor={(tile: any) => tile.id}
-                    numColumns={3}
-                    contentContainerStyle={{ alignItems: 'center' }}
-                />
+
+                    loadedAudioFiles && <FlatList
+                        scrollEnabled={false}
+                        data={tileData}
+                        renderItem={renderTile}
+                        keyExtractor={(tile: any) => tile.id}
+                        numColumns={3}
+                        contentContainerStyle={{ alignItems: 'center' }}
+                    />
                 }
             </View>
 
