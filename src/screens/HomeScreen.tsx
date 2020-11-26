@@ -6,6 +6,7 @@ import SoundTile from '../components/SoundTile';
 import BottomSheet from '../components/BottomSheet';
 import { tileData } from '../helpers/TileData';
 import Sound from "react-native-sound";
+import VolumeBottomSheet from '../components/VolumeBottomSheet';
 
 export default function HomeScreen() {
 
@@ -39,7 +40,7 @@ export default function HomeScreen() {
             white: require('../../assets/sounds/white.mp3'),
             wind: require('../../assets/sounds/wind.mp3'),
         };
-        
+
         tileData.forEach(tile => {
 
             let whoosh: Sound = new Sound(soundFilesPath[tile.name], (error) => {
@@ -48,8 +49,9 @@ export default function HomeScreen() {
                     return;
                 }
 
+                whoosh.setNumberOfLoops(-1);
+                whoosh.setVolume(0.5);
                 let newSound = { "name": tile.name, "soundObject": whoosh };
-                console.log(tile.name);
 
                 setSounds(prevArray => [...prevArray, newSound]);
             })
@@ -117,9 +119,10 @@ export default function HomeScreen() {
             <BottomSheet isDarkMode={isDarkMode}
                 isVisible={isTimerModalVisible}
                 setIsModalVisible={setIsTimerModalVisible} />
-            <BottomSheet isDarkMode={isDarkMode}
+            <VolumeBottomSheet isDarkMode={isDarkMode}
                 isVisible={isVolumeModalVisible}
-                setIsModalVisible={setIsVolumeModalVisible} />
+                setIsModalVisible={setIsVolumeModalVisible}
+                sounds={sounds} />
         </SafeAreaView>
     );
 
