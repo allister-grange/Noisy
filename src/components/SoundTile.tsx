@@ -36,9 +36,7 @@ const SoundTile = (props: any) => {
 
     const playSound = async () => {
         try {
-            await soundObject.playAsync();
-            await soundObject.setIsLoopingAsync(true);
-            // TODO await soundObject.unloadAsync();
+            await soundObject.play();
         } catch (error) {
             console.error(error);
         }
@@ -46,7 +44,7 @@ const SoundTile = (props: any) => {
 
     const pauseSound = async () => {
         try {
-            await soundObject.pauseAsync();
+            await soundObject.pause();
         } catch (error) {
             console.error(error);
         }

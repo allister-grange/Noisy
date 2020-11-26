@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View, StatusBar } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
@@ -13,75 +13,58 @@ export default function HomeScreen() {
     const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
     const [isVolumeModalVisible, setIsVolumeModalVisible] = useState(false);
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
-    const [soundFiles, setSoundFiles] = useState({});
-    // const [soundFiles, setSoundFiles] = useState({} as Dictionary<Audio.Sound>);
+    const [sounds, setSounds] = useState([] as Array<any>);
 
     interface Dictionary<T> {
         [Key: string]: T;
     }
 
     const loadSoundFiles = async () => {
-        // setLoadedAudioFiles(false);
+        setLoadedAudioFiles(false);
 
-        // const soundFilesPath: Dictionary<AVPlaybackSource>  = {
-        //     campfire: require('../../assets/sounds/campfire.mp3'),
-        //     car: require('../../assets/sounds/car.mp3'),
-        //     crickets: require('../../assets/sounds/crickets.mp3'),
-        //     fan: require('../../assets/sounds/fan.mp3'),
-        //     forest: require('../../assets/sounds/forest.mp3'),
-        //     guitar: require('../../assets/sounds/guitar.mp3'),
-        //     leaf: require('../../assets/sounds/leaf.mp3'),
-        //     office: require('../../assets/sounds/office.mp3'),
-        //     piano: require('../../assets/sounds/piano.mp3'),
-        //     rain: require('../../assets/sounds/rain.mp3'),
-        //     river: require('../../assets/sounds/river.mp3'),
-        //     thunderstorm: require('../../assets/sounds/thunderstorm.mp3'),
-        //     train: require('../../assets/sounds/train.mp3'),
-        //     white: require('../../assets/sounds/white.mp3'),
-        //     wind: require('../../assets/sounds/wind.mp3'),
-        // };
-
-        // let loadedSoundFiles: Dictionary<Audio.Sound> = {};
-
-        // await Promise.all (tileData.map(async (tile) => {
-
-        //     const soundObject = new Audio.Sound();
-        //     const loadedSoundFile = soundFilesPath[tile.name]
-        //     await soundObject.loadAsync(loadedSoundFile);
-
-        //     loadedSoundFiles[tile.name] = soundObject
-        // }));
-
-        // setSoundFiles(loadedSoundFiles);
-
-        console.log("hellooo");
+        const soundFilesPath: Dictionary<any> = {
+            campfire: require('../../assets/sounds/campfire.mp3'),
+            car: require('../../assets/sounds/car.mp3'),
+            crickets: require('../../assets/sounds/crickets.mp3'),
+            fan: require('../../assets/sounds/fan.mp3'),
+            forest: require('../../assets/sounds/forest.mp3'),
+            guitar: require('../../assets/sounds/guitar.mp3'),
+            leaf: require('../../assets/sounds/leaf.mp3'),
+            office: require('../../assets/sounds/office.mp3'),
+            piano: require('../../assets/sounds/piano.mp3'),
+            rain: require('../../assets/sounds/rain.mp3'),
+            river: require('../../assets/sounds/river.mp3'),
+            thunderstorm: require('../../assets/sounds/thunderstorm.mp3'),
+            train: require('../../assets/sounds/train.mp3'),
+            white: require('../../assets/sounds/white.mp3'),
+            wind: require('../../assets/sounds/wind.mp3'),
+        };
         
-        var whoosh = new Sound(require('../../assets/sounds/campfire.mp3'), (error) => {
-            if (error) {
-                console.log('failed to load the sound', error);
-                return;
-            }
-            // loaded successfully
-            console.log("I am in");
-            
-            console.log('duration in seconds: ' + whoosh.getDuration() + 'number of channels: ' + whoosh.getNumberOfChannels());
+        tileData.forEach(tile => {
 
-            // Play the sound with an onEnd callback
-            whoosh.play((success) => {
-                if (success) {
-                    console.log('successfully finished playing');
-                } else {
-                    console.log('playback failed due to audio decoding errors');
+            let whoosh: Sound = new Sound(soundFilesPath[tile.name], (error) => {
+                if (error) {
+                    console.log('failed to load the sound', error);
+                    return;
                 }
-            });
+
+                let newSound = { "name": tile.name, "soundObject": whoosh };
+                console.log(tile.name);
+
+                setSounds(prevArray => [...prevArray, newSound]);
+            })
+
         });
-        console.log("goodbye");
 
         setLoadedAudioFiles(true);
     };
 
     useEffect(() => {
-        loadSoundFiles();
+        async function asyncFunction() {
+            await loadSoundFiles();
+        }
+
+        asyncFunction();
     }, [])
 
     const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
@@ -89,14 +72,18 @@ export default function HomeScreen() {
 
     const renderTile = (tile: any) => {
 
-        const soundObject = {}
-        // const soundObject = soundFiles[tile.item.name]
+        const sound = sounds.find(sound => sound.name === tile.item.name)
 
-        return (<SoundTile name={tile.item.name} isDarkMode={isDarkMode}
-            darkThemeColor={tile.item.darkThemeColor}
-            lightThemeColor={tile.item.lightThemeColor}
-            iconName={tile.item.iconName}
-            soundObject={soundObject} />)
+        if (sound) {
+            return (<SoundTile name={tile.item.name} isDarkMode={isDarkMode}
+                darkThemeColor={tile.item.darkThemeColor}
+                lightThemeColor={tile.item.lightThemeColor}
+                iconName={tile.item.iconName}
+                soundObject={sound.soundObject} />)
+        }
+        else {
+            return (<ActivityIndicator />)
+        }
     };
 
     return (
@@ -109,6 +96,7 @@ export default function HomeScreen() {
                     loadedAudioFiles && <FlatList
                         scrollEnabled={false}
                         data={tileData}
+                        extraData={sounds}
                         renderItem={renderTile}
                         keyExtractor={(tile: any) => tile.id}
                         numColumns={3}
