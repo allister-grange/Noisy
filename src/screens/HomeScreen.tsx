@@ -61,6 +61,17 @@ export default function HomeScreen() {
         setLoadedAudioFiles(true);
     };
 
+    const changeVolumeOfSound = (sound: any, volume: number) => {
+
+        // console.log(sound.soundObject);
+
+        sound.soundObject.setVolume(volume)
+        
+        // let letChangedVolumeObj = sound.soundObject.setVolume(volume);
+
+        // setSounds(prevArray => [...prevArray, letChangedVolumeObj])
+    }
+
     useEffect(() => {
         async function asyncFunction() {
             await loadSoundFiles();
@@ -122,7 +133,8 @@ export default function HomeScreen() {
             <VolumeBottomSheet isDarkMode={isDarkMode}
                 isVisible={isVolumeModalVisible}
                 setIsModalVisible={setIsVolumeModalVisible}
-                sounds={sounds} />
+                sounds={sounds} 
+                changeVolumeOfSound={changeVolumeOfSound} />
         </SafeAreaView>
     );
 

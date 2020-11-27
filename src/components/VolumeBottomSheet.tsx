@@ -68,21 +68,21 @@ const VolumeBottomSheet = (props: any) => {
                 <Animated.View style={[styles.container, containerBackgroundColor,]}>
                     {/* {props.content} */}
                     <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-                        <Text>Yoza</Text>
-                        <Text style={{ color: textColor }}>Close Me</Text>
+                        <Text style={{ color: textColor, alignSelf: 'center', fontSize: 20 }}>Close Me</Text>
                         <ScrollView>
                             {props.sounds.map((sound: any) => {
                                 if (sound.soundObject._playing) {
                                     return (
-                                        <View key={sound.name} style={{ width: '100%', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                            <Text style={{ color: textColor }}>{sound.name}</Text>
+                                        <View key={sound.name} style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <Text style={{ color: textColor, paddingLeft: 10 }}>{sound.name}</Text>
                                             <Slider
-                                                style={{ width: '80%', height: 30 }}
+                                                style={{ width: '80%', height: 40, marginRight: 10}}
                                                 minimumValue={0}
                                                 maximumValue={1}
                                                 value={sound.soundObject.getVolume()}
                                                 minimumTrackTintColor="#000000"
                                                 maximumTrackTintColor="#FFFFFF"
+                                                onValueChange={(value) => props.changeVolumeOfSound(sound, value)}
                                             />
                                         </View>
                                     )
