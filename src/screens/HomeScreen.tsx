@@ -3,10 +3,11 @@ import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator 
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
-import BottomSheet from '../components/BottomSheet';
+import BottomSheet from '../components/TimerBottomSheet';
 import { tileData } from '../helpers/TileData';
 import Sound from "react-native-sound";
 import VolumeBottomSheet from '../components/VolumeBottomSheet';
+import TimerBottomSheet from '../components/TimerBottomSheet';
 
 export default function HomeScreen() {
 
@@ -35,7 +36,7 @@ export default function HomeScreen() {
             piano: require('../../assets/sounds/piano.mp3'),
             rain: require('../../assets/sounds/rain.mp3'),
             river: require('../../assets/sounds/river.mp3'),
-            thunderstorm: require('../../assets/sounds/thunderstorm.mp3'),
+            thunder: require('../../assets/sounds/thunder.mp3'),
             train: require('../../assets/sounds/train.mp3'),
             white: require('../../assets/sounds/white.mp3'),
             wind: require('../../assets/sounds/wind.mp3'),
@@ -127,7 +128,7 @@ export default function HomeScreen() {
                 />
             </View>
 
-            <BottomSheet isDarkMode={isDarkMode}
+            <TimerBottomSheet isDarkMode={isDarkMode}
                 isVisible={isTimerModalVisible}
                 setIsModalVisible={setIsTimerModalVisible} />
             <VolumeBottomSheet isDarkMode={isDarkMode}

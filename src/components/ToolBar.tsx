@@ -27,7 +27,7 @@ const ToolBar = (props: any) => {
                     isDarkMode ?
                         <Feather name="volume-2" size={35} color={iconColor} />
                         :
-                        <Feather name="volume" size={35} color={iconColor} />
+                        <Feather name="volume-2" size={35} color={iconColor} />
                 }
             </TouchableOpacity>
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Modal, StyleSheet, TouchableHighlight, TouchableOpacity, View, Text, Animated, Dimensions, PanResponder } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 
-const BottomSheet = (props: any) => {
+const TimerBottomSheet = (props: any) => {
 
     const { isDarkMode, setIsModalVisible, isVisible } = props;
 
@@ -76,7 +76,7 @@ const BottomSheet = (props: any) => {
     );
 }
 
-export default BottomSheet
+export default TimerBottomSheet
 
 const styles = StyleSheet.create({
     overlay: {

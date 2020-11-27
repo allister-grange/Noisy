@@ -73,7 +73,8 @@ const VolumeBottomSheet = (props: any) => {
                             {props.sounds.map((sound: any) => {
                                 if (sound.soundObject._playing) {
                                     return (
-                                        <View key={sound.name} style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <View key={sound.name} style={{ width: '100%', flexDirection: 'row', 
+                                                justifyContent: 'space-between', alignItems: 'center' }}>
                                             <Text style={{ color: textColor, paddingLeft: 10 }}>{sound.name}</Text>
                                             <Slider
                                                 style={{ width: '80%', height: 40, marginRight: 10}}
@@ -107,8 +108,8 @@ const styles = StyleSheet.create({
     },
     container: {
         paddingTop: 12,
-        borderTopRightRadius: 12,
-        borderTopLeftRadius: 12,
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
         height: '50%'
     },
 
