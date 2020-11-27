@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator, Text } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
-import BottomSheet from '../components/TimerBottomSheet';
 import { tileData } from '../helpers/TileData';
 import Sound from "react-native-sound";
 import VolumeBottomSheet from '../components/VolumeBottomSheet';
 import TimerBottomSheet from '../components/TimerBottomSheet';
+import { Modalize } from 'react-native-modalize';
+
 
 export default function HomeScreen() {
 
@@ -16,6 +17,16 @@ export default function HomeScreen() {
     const [isVolumeModalVisible, setIsVolumeModalVisible] = useState(false);
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
     const [sounds, setSounds] = useState([] as Array<any>);
+    const timerModalRef = useRef<Modalize>(null);
+    const volumeModalRef = useRef<Modalize>(null);
+
+    const openTimerModal = () => {
+        timerModalRef.current?.open();
+    };
+
+    const openVolumeModal = () => {
+        volumeModalRef.current?.open();
+    };
 
     interface Dictionary<T> {
         [Key: string]: T;
@@ -63,14 +74,7 @@ export default function HomeScreen() {
     };
 
     const changeVolumeOfSound = (sound: any, volume: number) => {
-
-        // console.log(sound.soundObject);
-
         sound.soundObject.setVolume(volume)
-        
-        // let letChangedVolumeObj = sound.soundObject.setVolume(volume);
-
-        // setSounds(prevArray => [...prevArray, letChangedVolumeObj])
     }
 
     useEffect(() => {
@@ -101,42 +105,55 @@ export default function HomeScreen() {
     };
 
     return (
-        <SafeAreaView style={[containerTheme, styles.container]}>
-            <StatusBar barStyle={statusBarStyle} />
+        <>
+            <SafeAreaView style={[containerTheme, styles.container]}>
+                <StatusBar barStyle={statusBarStyle} />
 
-            <View style={{ width: '100%', height: '100%' }}>
-                {
+                <View style={{ flex: 1 }}>
+                    {
+                        loadedAudioFiles &&
+                        <FlatList
+                            scrollEnabled={false}
+                            data={tileData}
+                            extraData={sounds}
+                            renderItem={renderTile}
+                            keyExtractor={(tile: any) => tile.id}
+                            numColumns={3}
+                            contentContainerStyle={{ alignItems: 'center' }}
+                        />
+                    }
+                </View>
 
-                    loadedAudioFiles && <FlatList
-                        scrollEnabled={false}
-                        data={tileData}
-                        extraData={sounds}
-                        renderItem={renderTile}
-                        keyExtractor={(tile: any) => tile.id}
-                        numColumns={3}
-                        contentContainerStyle={{ alignItems: 'center' }}
+                <View style={styles.toolbar}>
+                    <ToolBar
+                        isDarkMode={isDarkMode}
+                        setIsDarkMode={setIsDarkMode}
+                        openTimerModal={openTimerModal}
+                        openVolumeModal={openVolumeModal}
                     />
-                }
-            </View>
+                </View>
+            </SafeAreaView>
 
-            <View style={styles.toolbar}>
-                <ToolBar
-                    isDarkMode={isDarkMode}
-                    setIsDarkMode={setIsDarkMode}
-                    setIsVolumeModalVisible={setIsVolumeModalVisible}
-                    setIsTimerModalVisible={setIsTimerModalVisible}
-                />
-            </View>
+            <Modalize
+                adjustToContentHeight
+                ref={timerModalRef}
+                modalStyle={containerTheme}>
+                <TimerBottomSheet isDarkMode={isDarkMode}
+                    isVisible={isTimerModalVisible}
+                    setIsModalVisible={setIsTimerModalVisible} />
+            </Modalize>
 
-            <TimerBottomSheet isDarkMode={isDarkMode}
-                isVisible={isTimerModalVisible}
-                setIsModalVisible={setIsTimerModalVisible} />
-            <VolumeBottomSheet isDarkMode={isDarkMode}
-                isVisible={isVolumeModalVisible}
-                setIsModalVisible={setIsVolumeModalVisible}
-                sounds={sounds} 
-                changeVolumeOfSound={changeVolumeOfSound} />
-        </SafeAreaView>
+            <Modalize
+                adjustToContentHeight
+                ref={volumeModalRef}
+                modalStyle={containerTheme}>
+                <VolumeBottomSheet isDarkMode={isDarkMode}
+                    isVisible={isVolumeModalVisible}
+                    setIsModalVisible={setIsVolumeModalVisible}
+                    sounds={sounds}
+                    changeVolumeOfSound={changeVolumeOfSound} />
+            </Modalize>
+        </>
     );
 
 }
