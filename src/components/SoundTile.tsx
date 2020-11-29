@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { Animated, StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native';
-// import { Ionicons, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -53,7 +52,6 @@ const SoundTile = (props: any) => {
     return (
         <TouchableOpacity
             activeOpacity={1}
-            style={styles.tileButton}
             onPress={() => {
                 spring();
                 playSound();
@@ -86,9 +84,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         margin: 10,
     },
-    darkThemeContainer: {
-
-    },
     isPlaying: {
         borderColor: 'grey',
         borderWidth: 3,
@@ -100,10 +95,5 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.37,
         shadowRadius: 7.49,
         elevation: 12,
-    },
-    lightThemeContainer: {
-
-    },
-    tileButton: {
     }
 });

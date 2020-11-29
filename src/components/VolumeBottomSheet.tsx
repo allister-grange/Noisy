@@ -1,8 +1,7 @@
 import React from 'react';
-import {  StyleSheet, TouchableOpacity, View, Text, Animated } from 'react-native';
+import {  StyleSheet, TouchableOpacity, View, Text, Animated, SafeAreaView } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import Slider from '@react-native-community/slider';
-import Entypo from 'react-native-vector-icons/Entypo'
 
 const VolumeBottomSheet = (props: any) => {
 
@@ -22,13 +21,11 @@ const VolumeBottomSheet = (props: any) => {
 
     const containerBackgroundColor = isDarkMode ?
         GlobalStyles.darkThemeModalContainer : GlobalStyles.lightThemeModalContainer;
-    const iconColor = isDarkMode ? "#202020" : "white";
     const textColor = isDarkMode ? "white" : "black";
-    const crossColor = isDarkMode ? "black" : "white";
 
     return (
-            <View style={styles.overlay}>
-                <View style={[styles.container, containerBackgroundColor,]}>
+            <SafeAreaView style={[styles.overlay, containerBackgroundColor]}>
+                <View style={styles.container}>
                     {
                         noSoundsPlaying() &&
                         <View style={{ justifyContent: 'center', alignItems: 'center', height: 50 }}>
@@ -57,7 +54,7 @@ const VolumeBottomSheet = (props: any) => {
                             }
                         })}
                 </View>
-            </View>
+            </SafeAreaView>
     );
 }
 
@@ -66,13 +63,14 @@ export default VolumeBottomSheet
 const styles = StyleSheet.create({
     overlay: {
         flex: 1,
-        justifyContent: 'flex-end',
+        borderTopRightRadius: 15,
+        borderTopLeftRadius: 15,
     },
     container: {
         paddingTop: 12,
         borderTopRightRadius: 15,
         borderTopLeftRadius: 15,
         height: '100%',
-        paddingBottom: 30
+        paddingBottom: 15
     },
 });

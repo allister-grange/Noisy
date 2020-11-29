@@ -21,7 +21,6 @@ export default function HomeScreen() {
     const [countDownLength, setCountDownLength] = useState(0);
     const [isCounting, setIsCounting] = useState(false);
     const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
-    let timer = 0;
 
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
@@ -62,13 +61,13 @@ export default function HomeScreen() {
     }, [countDownLength, isCounting])
 
     const stopAllSounds = () => (
-        sounds.map((sound: any) => { 
-            if(sound.soundObject.isPlaying)   
-                sound.soundObject.pause() 
+        sounds.map((sound: any) => {
+            if (sound.soundObject.isPlaying)
+                sound.soundObject.pause()
         })
     );
 
-    const resetTimer = () => ( setCountDownLength(0) )
+    const resetTimer = () => (setCountDownLength(0))
 
     const startTimer = () => {
 
@@ -198,7 +197,7 @@ export default function HomeScreen() {
             <Modalize
                 adjustToContentHeight
                 ref={timerModalRef}
-                modalStyle={[containerTheme, styles.timerModalContainer]}>
+                modalStyle={containerTheme}>
                 <TimerBottomSheet
                     isDarkMode={isDarkMode}
                     isVisible={isTimerModalVisible}
@@ -220,7 +219,8 @@ export default function HomeScreen() {
                     isVisible={isVolumeModalVisible}
                     setIsModalVisible={setIsVolumeModalVisible}
                     sounds={sounds}
-                    changeVolumeOfSound={changeVolumeOfSound} />
+                    changeVolumeOfSound={changeVolumeOfSound}
+                />
             </Modalize>
         </>
     );
@@ -237,21 +237,15 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         paddingLeft: 12,
         paddingRight: 12,
-
         bottom: '3%',
         width: '99%',
         alignSelf: 'center',
         height: '10%',
-
         position: 'absolute'
     },
     overlay: {
         backgroundColor: 'rgba(0,0,0,0.2)',
         flex: 1,
         justifyContent: 'flex-end',
-    },
-    timerModalContainer: {
-        // minHeight: '30%'
     }
-
 });

@@ -76,9 +76,8 @@ const TimerBottomSheet = (props: any) => {
                         />
                         <Text style={{ color: textColor, fontSize: 12, paddingTop: 3 }}>seconds</Text>
                     </View>
-
+                    
                 </View>
-
 
                 {isCounting ?
                     <View style={styles.timerButtonContainer}>
@@ -110,6 +109,8 @@ export default TimerBottomSheet
 const styles = StyleSheet.create({
     overlay: {
         flex: 1,
+        borderTopRightRadius: 15,
+        borderTopLeftRadius: 15,
     },
     container: {
         paddingTop: 12,
