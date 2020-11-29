@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View, StatusBar} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator, Text } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
-import BottomSheet from '../components/BottomSheet';
 import { tileData } from '../helpers/TileData';
-import TrackPlayer from 'react-native-track-player';
+import Sound from "react-native-sound";
+import VolumeBottomSheet from '../components/VolumeBottomSheet';
+import TimerBottomSheet from '../components/TimerBottomSheet';
+import { Modalize } from 'react-native-modalize';
+
 
 export default function HomeScreen() {
 
@@ -13,8 +16,19 @@ export default function HomeScreen() {
     const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
     const [isVolumeModalVisible, setIsVolumeModalVisible] = useState(false);
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
-    const [soundFiles, setSoundFiles] = useState({});
-    // const [soundFiles, setSoundFiles] = useState({} as Dictionary<Audio.Sound>);
+    const [sounds, setSounds] = useState([] as Array<any>);
+    const [timerLength, setTimerLength] = useState({ hours: 0, minutes: 0, seconds: 0 });
+    const timerModalRef = useRef<Modalize>(null);
+    const volumeModalRef = useRef<Modalize>(null);
+
+
+    const openTimerModal = () => {
+        timerModalRef.current?.open();
+    };
+
+    const openVolumeModal = () => {
+        volumeModalRef.current?.open();
+    };
 
     interface Dictionary<T> {
         [Key: string]: T;
@@ -22,112 +36,131 @@ export default function HomeScreen() {
 
     const loadSoundFiles = async () => {
         setLoadedAudioFiles(false);
-        
-        // const soundFilesPath: Dictionary<AVPlaybackSource>  = {
-        //     campfire: require('./../../assets/sounds/campfire.mp3'),
-        //     car: require('./../../assets/sounds/car.mp3'),
-        //     crickets: require('./../../assets/sounds/crickets.mp3'),
-        //     fan: require('./../../assets/sounds/fan.mp3'),
-        //     forest: require('./../../assets/sounds/forest.mp3'),
-        //     guitar: require('./../../assets/sounds/guitar.mp3'),
-        //     leaf: require('./../../assets/sounds/leaf.mp3'),
-        //     office: require('./../../assets/sounds/office.mp3'),
-        //     piano: require('./../../assets/sounds/piano.mp3'),
-        //     rain: require('./../../assets/sounds/rain.mp3'),
-        //     river: require('./../../assets/sounds/river.mp3'),
-        //     thunderstorm: require('./../../assets/sounds/thunderstorm.mp3'),
-        //     train: require('./../../assets/sounds/train.mp3'),
-        //     white: require('./../../assets/sounds/white.mp3'),
-        //     wind: require('./../../assets/sounds/wind.mp3'),
-        // };
 
-        // let loadedSoundFiles: Dictionary<Audio.Sound> = {};
+        const soundFilesPath: Dictionary<any> = {
+            campfire: require('../../assets/sounds/campfire.mp3'),
+            car: require('../../assets/sounds/car.mp3'),
+            crickets: require('../../assets/sounds/crickets.mp3'),
+            fan: require('../../assets/sounds/fan.mp3'),
+            forest: require('../../assets/sounds/forest.mp3'),
+            guitar: require('../../assets/sounds/guitar.mp3'),
+            leaf: require('../../assets/sounds/leaf.mp3'),
+            office: require('../../assets/sounds/office.mp3'),
+            piano: require('../../assets/sounds/piano.mp3'),
+            rain: require('../../assets/sounds/rain.mp3'),
+            river: require('../../assets/sounds/river.mp3'),
+            thunder: require('../../assets/sounds/thunder.mp3'),
+            train: require('../../assets/sounds/train.mp3'),
+            white: require('../../assets/sounds/white.mp3'),
+            wind: require('../../assets/sounds/wind.mp3'),
+        };
 
-        // await Promise.all (tileData.map(async (tile) => {
-            
-        //     const soundObject = new Audio.Sound();
-        //     const loadedSoundFile = soundFilesPath[tile.name]
-        //     await soundObject.loadAsync(loadedSoundFile);
-            
-        //     loadedSoundFiles[tile.name] = soundObject
-        // }));
-                
-        // setSoundFiles(loadedSoundFiles);
-        
+        tileData.forEach(tile => {
 
-	const start = async () => {
-   	 // Set up the player
-    	await TrackPlayer.setupPlayer();
+            let whoosh: Sound = new Sound(soundFilesPath[tile.name], (error) => {
+                if (error) {
+                    console.log('failed to load the sound', error);
+                    return;
+                }
 
-   	 // Add a track to the queue
-   	 await TrackPlayer.add({
-       	 id: 'trackId',
-       	 url: require('./../../assets/sounds/thunderstorm.mp3'),
-       	 title: 'Track Title',
-       	 artist: 'Track Artist'
-    	});
+                whoosh.setNumberOfLoops(-1);
+                whoosh.setVolume(0.5);
+                let newSound = { "name": tile.name, "soundObject": whoosh };
 
-   	 // Start playing it
-   	 await TrackPlayer.play();
-	};
-	start();
+                setSounds(prevArray => [...prevArray, newSound]);
+            })
 
-	setLoadedAudioFiles(true);
+        });
+
+        setLoadedAudioFiles(true);
     };
 
+    const changeVolumeOfSound = (sound: any, volume: number) => {
+        sound.soundObject.setVolume(volume)
+    }
+
     useEffect(() => {
-        loadSoundFiles();
+        async function asyncFunction() {
+            await loadSoundFiles();
+        }
+
+        asyncFunction();
     }, [])
 
     const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
     const containerTheme = isDarkMode ? GlobalStyles.darkThemeContainer : GlobalStyles.lightThemeContainer;
 
     const renderTile = (tile: any) => {
-    
-        const soundObject = {}
-        // const soundObject = soundFiles[tile.item.name]
-        
-        return (<SoundTile name={tile.item.name} isDarkMode={isDarkMode}
-            darkThemeColor={tile.item.darkThemeColor}
-            lightThemeColor={tile.item.lightThemeColor}
-            iconName={tile.item.iconName}
-            soundObject={soundObject} />)
+
+        const sound = sounds.find(sound => sound.name === tile.item.name)
+
+        if (sound) {
+            return (<SoundTile name={tile.item.name} isDarkMode={isDarkMode}
+                darkThemeColor={tile.item.darkThemeColor}
+                lightThemeColor={tile.item.lightThemeColor}
+                iconName={tile.item.iconName}
+                soundObject={sound.soundObject} />)
+        }
+        else {
+            return (<ActivityIndicator />)
+        }
     };
 
     return (
-        <SafeAreaView style={[containerTheme, styles.container]}>
-            <StatusBar barStyle={statusBarStyle} />
+        <>
+            <SafeAreaView style={[containerTheme, styles.container]}>
+                <StatusBar barStyle={statusBarStyle} />
 
-            <View style={{ width: '100%', height: '100%' }}>
-                {
-                
-                loadedAudioFiles && <FlatList
-                    scrollEnabled={false}
-                    data={tileData}
-                    renderItem={renderTile}
-                    keyExtractor={(tile: any) => tile.id}
-                    numColumns={3}
-                    contentContainerStyle={{ alignItems: 'center' }}
-                />
-                }
-            </View>
+                <View style={{ flex: 1 }}>
+                    {
+                        loadedAudioFiles &&
+                        <FlatList
+                            scrollEnabled={false}
+                            data={tileData}
+                            extraData={sounds}
+                            renderItem={renderTile}
+                            keyExtractor={(tile: any) => tile.id}
+                            numColumns={3}
+                            contentContainerStyle={{ alignItems: 'center' }}
+                        />
+                    }
+                </View>
 
-            <View style={styles.toolbar}>
-                <ToolBar
+                <View style={styles.toolbar}>
+                    <ToolBar
+                        isDarkMode={isDarkMode}
+                        setIsDarkMode={setIsDarkMode}
+                        openTimerModal={openTimerModal}
+                        openVolumeModal={openVolumeModal}
+                    />
+                </View>
+            </SafeAreaView>
+
+            <Modalize
+                adjustToContentHeight
+                ref={timerModalRef}
+                modalStyle={[containerTheme, styles.timerModalContainer]}>
+                <TimerBottomSheet
                     isDarkMode={isDarkMode}
-                    setIsDarkMode={setIsDarkMode}
-                    setIsVolumeModalVisible={setIsVolumeModalVisible}
-                    setIsTimerModalVisible={setIsTimerModalVisible}
+                    isVisible={isTimerModalVisible}
+                    setIsModalVisible={setIsTimerModalVisible}
+                    setTimerLength={setTimerLength}
+                    timerLength={timerLength}
                 />
-            </View>
+            </Modalize>
 
-            <BottomSheet isDarkMode={isDarkMode}
-                isVisible={isTimerModalVisible}
-                setIsModalVisible={setIsTimerModalVisible} />
-            <BottomSheet isDarkMode={isDarkMode}
-                isVisible={isVolumeModalVisible}
-                setIsModalVisible={setIsVolumeModalVisible} />
-        </SafeAreaView>
+            <Modalize
+                adjustToContentHeight
+                ref={volumeModalRef}
+                modalStyle={containerTheme}>
+                <VolumeBottomSheet
+                    isDarkMode={isDarkMode}
+                    isVisible={isVolumeModalVisible}
+                    setIsModalVisible={setIsVolumeModalVisible}
+                    sounds={sounds}
+                    changeVolumeOfSound={changeVolumeOfSound} />
+            </Modalize>
+        </>
     );
 
 }
@@ -155,5 +188,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
     },
+    timerModalContainer: {
+        // minHeight: '30%'
+    }
 
 });

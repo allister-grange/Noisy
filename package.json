@@ -10,10 +10,13 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/slider": "^3.0.3",
     "@types/react-native-vector-icons": "^6.4.6",
     "react": "16.13.1",
     "react-native": "0.63.3",
-    "react-native-track-player": "^1.2.3",
+    "react-native-gesture-handler": "^1.9.0",
+    "react-native-modalize": "^2.0.6",
+    "react-native-sound": "^0.11.0",
     "react-native-vector-icons": "^7.1.0"
   },
   "devDependencies": {

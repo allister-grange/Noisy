@@ -13,7 +13,7 @@ export const tileData = [
         darkThemeColor: "",
         lightThemeColor: "#623BF5",
         isPlaying: false,
-        name: "thunderstorm"
+        name: "thunder"
     },
     {
         id: 3,
