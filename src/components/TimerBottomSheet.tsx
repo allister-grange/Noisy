@@ -11,57 +11,68 @@ const TimerBottomSheet = (props: any) => {
     const textColor = isDarkMode ? "white" : "black";
     const borderColor = isDarkMode ? "white" : "grey";
 
+
+    const onMinuteChange = (time: number) => {
+        if (time <= 59 && time >= 0)
+        setTimerLength({ ...timerLength, minutes: time })
+    }
+
+    const onSecondChange = (time: number) => {
+        if (time <= 59 && time >= 0)
+        setTimerLength({ ...timerLength, seconds: time })
+    }
+
+    const onHourChange = (time: number) => {
+        if (time <= 99 && time >= 0)
+            setTimerLength({ ...timerLength, hours: time })
+    }
+
     return (
         <SafeAreaView style={[styles.overlay, containerBackgroundColor]}>
             <View style={styles.container}>
                 <View style={styles.timerInputsContainer}>
-                    <TextInput
-                        style={[styles.timerInputs, { color: textColor, borderColor: borderColor }]}
-                        onChangeText={length =>
-                            setTimerLength({
-                                ...timerLength,
-                                hours: length
-                            })
-                        }
-                        value={timerLength.hours.toString()}
-                        keyboardType='number-pad'
-                        placeholder="0h"
 
-                    />
+                    <View style={{ alignItems: 'center' }}>
+                        <TextInput
+                            style={[styles.timerInputs, { color: textColor, borderColor: borderColor }]}
+                            onChangeText={length => onHourChange(parseInt(length))}
+                            value={timerLength.hours.toString()}
+                            keyboardType='number-pad'
+                            placeholder="0h"
+                        />
+                        <Text style={{color: textColor, fontSize: 12, paddingTop: 3}}>hours</Text>
+                    </View>
 
-                    <View style={{alignSelf: 'center'}}>
+                    <View style={{ alignSelf: 'center' }}>
                         <Text style={[styles.semiColumnText, { color: textColor }]}>:</Text>
                     </View>
 
-                    <TextInput
-                        style={[styles.timerInputs, { color: textColor, borderColor: borderColor }]}
-                        onChangeText={length =>
-                            setTimerLength({
-                                ...timerLength,
-                                minutes: length
-                            })
-                        }
-                        value={timerLength.minutes.toString()}
-                        keyboardType='number-pad'
-                        placeholder="0m"
-                    />
+                    <View style={{ alignItems: 'center' }}>
+                        <TextInput
+                            style={[styles.timerInputs, { color: textColor, borderColor: borderColor }]}
+                            onChangeText={length => onMinuteChange(parseInt(length))}
+                            value={timerLength.minutes.toString()}
+                            keyboardType='number-pad'
+                            placeholder="0m"
+                        />
+                        <Text style={{color: textColor, fontSize: 12, paddingTop: 3}}>minutes</Text>
+                    </View>
 
-                    <View style={{alignSelf: 'center'}}>
+                    <View style={{ alignSelf: 'center' }}>
                         <Text style={[styles.semiColumnText, { color: textColor }]}>:</Text>
                     </View>
 
-                    <TextInput
-                        style={[styles.timerInputs, { color: textColor, borderColor: borderColor }]}
-                        onChangeText={length =>
-                            setTimerLength({
-                                ...timerLength,
-                                seconds: length
-                            })
-                        }
-                        value={timerLength.seconds.toString()}
-                        keyboardType='number-pad'
-                        placeholder="0s"
-                    />
+                    <View style={{ alignItems: 'center' }}>
+                        <TextInput
+                            style={[styles.timerInputs, { color: textColor, borderColor: borderColor }]}
+                            onChangeText={length => onSecondChange(parseInt(length))}
+                            value={timerLength.seconds.toString()}
+                            keyboardType='number-pad'
+                            placeholder="0s"
+                        />
+                        <Text style={{color: textColor, fontSize: 12, paddingTop: 3}}>seconds</Text>
+                    </View>
+
                 </View>
 
                 <View style={styles.timerButtonContainer}>
