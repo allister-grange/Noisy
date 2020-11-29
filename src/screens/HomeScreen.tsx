@@ -18,10 +18,14 @@ export default function HomeScreen() {
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
     const [sounds, setSounds] = useState([] as Array<any>);
     const [timerLength, setTimerLength] = useState({ hours: 0, minutes: 0, seconds: 0 });
+    const [countDownLength, setCountDownLength] = useState(0);
+    const [isCounting, setIsCounting] = useState(false);
+    const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
+    let timer = 0; 
+
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
-
-
+    
     const openTimerModal = () => {
         timerModalRef.current?.open();
     };
@@ -33,6 +37,37 @@ export default function HomeScreen() {
     interface Dictionary<T> {
         [Key: string]: T;
     }
+
+    useEffect(() => {
+        
+        console.log("I am being changed to " + countDownLength);
+        setTimerLength({hours: 0, minutes: 0, seconds: countDownLength})
+        
+        if(countDownLength > 1 && !isCounting){
+            setIsCounting(true);
+            let interval = setInterval(countDown, 1000);
+            setIntervalVar(interval);
+        }
+        else if(countDownLength == 0){
+            console.log("I am done");
+            setIsCounting(false);
+            clearInterval(intervalVar);
+        }
+
+    }, [countDownLength, isCounting])
+
+    const startTimer = () => {
+                
+        let totalTimeLengthInSeconds: number = 0;
+        
+        totalTimeLengthInSeconds += Number(timerLength.seconds)
+        totalTimeLengthInSeconds += Number(timerLength.minutes * 60)
+        totalTimeLengthInSeconds += Number(timerLength.hours * 3600)
+                
+        setCountDownLength(totalTimeLengthInSeconds);
+    }
+
+    const countDown = () => ( setCountDownLength(countDownLength => countDownLength - 1));
 
     const loadSoundFiles = async () => {
         setLoadedAudioFiles(false);
@@ -146,6 +181,7 @@ export default function HomeScreen() {
                     setIsModalVisible={setIsTimerModalVisible}
                     setTimerLength={setTimerLength}
                     timerLength={timerLength}
+                    startTimer={startTimer}
                 />
             </Modalize>
 
