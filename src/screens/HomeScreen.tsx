@@ -21,11 +21,11 @@ export default function HomeScreen() {
     const [countDownLength, setCountDownLength] = useState(0);
     const [isCounting, setIsCounting] = useState(false);
     const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
-    let timer = 0; 
+    let timer = 0;
 
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
-    
+
     const openTimerModal = () => {
         timerModalRef.current?.open();
     };
@@ -38,36 +38,60 @@ export default function HomeScreen() {
         [Key: string]: T;
     }
 
+    type CountDown = {
+        hours: number,
+        minutes: number,
+        seconds: number
+    }
+
     useEffect(() => {
-        
-        console.log("I am being changed to " + countDownLength);
-        setTimerLength({hours: 0, minutes: 0, seconds: countDownLength})
-        
-        if(countDownLength > 1 && !isCounting){
+
+        setTimerLength(formatTimeLeft(countDownLength));
+
+        if (countDownLength > 1 && !isCounting) {
             setIsCounting(true);
             let interval = setInterval(countDown, 1000);
             setIntervalVar(interval);
         }
-        else if(countDownLength == 0){
-            console.log("I am done");
+        else if (countDownLength == 0) {
             setIsCounting(false);
             clearInterval(intervalVar);
+            stopAllSounds();
         }
 
     }, [countDownLength, isCounting])
 
+    const stopAllSounds = () => (
+        sounds.map((sound: any) => { 
+            if(sound.soundObject.isPlaying)   
+                sound.soundObject.pause() 
+        })
+    );
+
+    const resetTimer = () => ( setCountDownLength(0) )
+
     const startTimer = () => {
-                
+
         let totalTimeLengthInSeconds: number = 0;
-        
+
         totalTimeLengthInSeconds += Number(timerLength.seconds)
         totalTimeLengthInSeconds += Number(timerLength.minutes * 60)
         totalTimeLengthInSeconds += Number(timerLength.hours * 3600)
-                
+
         setCountDownLength(totalTimeLengthInSeconds);
     }
 
-    const countDown = () => ( setCountDownLength(countDownLength => countDownLength - 1));
+    const formatTimeLeft = (timeLeft: number): CountDown => {
+
+        let h = Math.floor(timeLeft / 3600);
+        let m = Math.floor(timeLeft % 3600 / 60);
+        let s = Math.floor(timeLeft % 3600 % 60);
+
+        return { hours: h, minutes: m, seconds: s };
+
+    }
+
+    const countDown = () => (setCountDownLength(countDownLength => countDownLength - 1));
 
     const loadSoundFiles = async () => {
         setLoadedAudioFiles(false);
@@ -182,6 +206,8 @@ export default function HomeScreen() {
                     setTimerLength={setTimerLength}
                     timerLength={timerLength}
                     startTimer={startTimer}
+                    isCounting={isCounting}
+                    resetTimer={resetTimer}
                 />
             </Modalize>
 

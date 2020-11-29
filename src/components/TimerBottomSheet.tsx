@@ -4,13 +4,14 @@ import GlobalStyles from '../styles/GlobalStyles';
 
 const TimerBottomSheet = (props: any) => {
 
-    const { isDarkMode, setTimerLength, timerLength, startTimer } = props;
+    const { isDarkMode, setTimerLength, timerLength, 
+            startTimer, isCounting, resetTimer } = props;
 
     const containerBackgroundColor = isDarkMode ?
         GlobalStyles.darkThemeModalContainer : GlobalStyles.lightThemeModalContainer;
     const textColor = isDarkMode ? "white" : "black";
     const borderColor = isDarkMode ? "white" : "grey";
-
+    const editable = isCounting ? false : true;
 
     const onMinuteChange = (time: any) => {
         if (time <= 99)
@@ -39,6 +40,7 @@ const TimerBottomSheet = (props: any) => {
                             value={timerLength.hours.toString()}
                             keyboardType='number-pad'
                             placeholder="0h"
+                            editable={editable}
                         />
                         <Text style={{ color: textColor, fontSize: 12, paddingTop: 3 }}>hours</Text>
                     </View>
@@ -54,6 +56,7 @@ const TimerBottomSheet = (props: any) => {
                             value={timerLength.minutes.toString()}
                             keyboardType='number-pad'
                             placeholder="0m"
+                            editable={editable}
                         />
                         <Text style={{ color: textColor, fontSize: 12, paddingTop: 3 }}>minutes</Text>
                     </View>
@@ -69,20 +72,33 @@ const TimerBottomSheet = (props: any) => {
                             value={timerLength.seconds.toString()}
                             keyboardType='number-pad'
                             placeholder="0s"
+                            editable={editable}
                         />
                         <Text style={{ color: textColor, fontSize: 12, paddingTop: 3 }}>seconds</Text>
                     </View>
 
                 </View>
 
-                <View style={styles.timerButtonContainer}>
-                    <TouchableOpacity
-                        style={{ width: '15%', height: '100%' }}
-                        onPress={startTimer}
-                    >
-                        <Text style={[styles.timerText, { color: textColor, borderColor: borderColor }]}>Set</Text>
-                    </TouchableOpacity>
-                </View>
+
+                {isCounting ?
+                    <View style={styles.timerButtonContainer}>
+                        <TouchableOpacity
+                            style={{ width: '15%', height: '100%' }}
+                            onPress={resetTimer}
+                        >
+                            <Text style={[styles.timerText, { color: textColor, borderColor: borderColor }]}>stop</Text>
+                        </TouchableOpacity>
+                    </View>
+                    :
+                    <View style={styles.timerButtonContainer}>
+                        <TouchableOpacity
+                            style={{ width: '15%', height: '100%' }}
+                            onPress={startTimer}
+                        >
+                            <Text style={[styles.timerText, { color: textColor, borderColor: borderColor }]}>set</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
 
             </View>
         </SafeAreaView>
@@ -128,17 +144,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         textAlign: 'center',
         paddingVertical: 10,
-        paddingHorizontal: 1
+        paddingHorizontal: 1,
+        fontSize: 15
     },
     semiColumnText: {
         fontSize: 20,
-        // justifyContent: 'flex-end',
-        // alignItems: 'flex-end', 
-        // textAlign: 'center',
-        // textAlignVertical: 'center'
     },
     semiColumnContainer: {
-        alignSelf: 'center', 
+        alignSelf: 'center',
         paddingBottom: 20
     }
 });
