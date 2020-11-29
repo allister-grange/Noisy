@@ -16,7 +16,7 @@ export default function HomeScreen() {
     const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
     const [isVolumeModalVisible, setIsVolumeModalVisible] = useState(false);
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
-    const [sounds, setSounds] = useState([] as Array<any>);
+    const [sounds, setSounds] = useState([] as Array<SoundType>);
     const [timerLength, setTimerLength] = useState({ hours: 0, minutes: 0, seconds: 0 });
     const [countDownLength, setCountDownLength] = useState(0);
     const [isCounting, setIsCounting] = useState(false);
@@ -24,6 +24,11 @@ export default function HomeScreen() {
 
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
+
+    type SoundType = {
+        name: string,
+        soundObject: Sound
+    }
 
     const openTimerModal = () => {
         timerModalRef.current?.open();
@@ -61,11 +66,25 @@ export default function HomeScreen() {
     }, [countDownLength, isCounting])
 
     const stopAllSounds = () => (
-        sounds.map((sound: any) => {
-            if (sound.soundObject.isPlaying)
-                sound.soundObject.pause()
+        sounds.map((sound: SoundType) => {
+            if (sound.soundObject.isPlaying()){
+                triggerFadeOut(sound, 10);
+            }
         })
     );
+
+    const triggerFadeOut = async (sound: SoundType, count: number) => {        
+        if(count == 0){            
+            return;
+        }
+        sound.soundObject.setVolume(sound.soundObject.getVolume() / 1.5)
+        await delay(300);
+        triggerFadeOut(sound, count - 1);
+    }
+
+    function delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
+    }
 
     const resetTimer = () => (setCountDownLength(0))
 
