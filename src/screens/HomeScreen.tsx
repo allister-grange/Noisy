@@ -17,8 +17,10 @@ export default function HomeScreen() {
     const [isVolumeModalVisible, setIsVolumeModalVisible] = useState(false);
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
     const [sounds, setSounds] = useState([] as Array<any>);
+    const [timerLength, setTimerLength] = useState({ hours: 0, minutes: 0, seconds: 0 });
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
+
 
     const openTimerModal = () => {
         timerModalRef.current?.open();
@@ -137,17 +139,22 @@ export default function HomeScreen() {
             <Modalize
                 adjustToContentHeight
                 ref={timerModalRef}
-                modalStyle={containerTheme}>
-                <TimerBottomSheet isDarkMode={isDarkMode}
+                modalStyle={[containerTheme, styles.timerModalContainer]}>
+                <TimerBottomSheet
+                    isDarkMode={isDarkMode}
                     isVisible={isTimerModalVisible}
-                    setIsModalVisible={setIsTimerModalVisible} />
+                    setIsModalVisible={setIsTimerModalVisible}
+                    setTimerLength={setTimerLength}
+                    timerLength={timerLength}
+                />
             </Modalize>
 
             <Modalize
                 adjustToContentHeight
                 ref={volumeModalRef}
                 modalStyle={containerTheme}>
-                <VolumeBottomSheet isDarkMode={isDarkMode}
+                <VolumeBottomSheet
+                    isDarkMode={isDarkMode}
                     isVisible={isVolumeModalVisible}
                     setIsModalVisible={setIsVolumeModalVisible}
                     sounds={sounds}
@@ -181,5 +188,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
     },
+    timerModalContainer: {
+        // minHeight: '30%'
+    }
 
 });
