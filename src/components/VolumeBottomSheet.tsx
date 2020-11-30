@@ -1,5 +1,5 @@
 import React from 'react';
-import {  StyleSheet, TouchableOpacity, View, Text, Animated, SafeAreaView } from 'react-native';
+import {  StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import Slider from '@react-native-community/slider';
 

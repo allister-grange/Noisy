@@ -9,7 +9,6 @@ import VolumeBottomSheet from '../components/VolumeBottomSheet';
 import TimerBottomSheet from '../components/TimerBottomSheet';
 import { Modalize } from 'react-native-modalize';
 
-
 export default function HomeScreen() {
 
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -38,16 +37,6 @@ export default function HomeScreen() {
         volumeModalRef.current?.open();
     };
 
-    interface Dictionary<T> {
-        [Key: string]: T;
-    }
-
-    type CountDown = {
-        hours: number,
-        minutes: number,
-        seconds: number
-    }
-
     useEffect(() => {
 
         setTimerLength(formatTimeLeft(countDownLength));
@@ -67,23 +56,25 @@ export default function HomeScreen() {
 
     const stopAllSounds = () => (
         sounds.map((sound: SoundType) => {
-            if (sound.soundObject.isPlaying()){
-                triggerFadeOut(sound, 10);
+            if (sound.soundObject.isPlaying()) {
+                triggerFadeOut(sound, 20);
             }
         })
     );
 
-    const triggerFadeOut = async (sound: SoundType, count: number) => {        
-        if(count == 0){            
+    const triggerFadeOut = async (sound: SoundType, count: number) => {
+        if (count == 0) {
+            sound.soundObject.stop();
+            setSounds(oldSounds => [...oldSounds])
             return;
         }
-        sound.soundObject.setVolume(sound.soundObject.getVolume() / 1.5)
-        await delay(300);
+        sound.soundObject.setVolume(sound.soundObject.getVolume() / 1.25)
+        await delay(150);
         triggerFadeOut(sound, count - 1);
     }
 
     function delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms) );
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     const resetTimer = () => (setCountDownLength(0))
@@ -106,7 +97,6 @@ export default function HomeScreen() {
         let s = Math.floor(timeLeft % 3600 % 60);
 
         return { hours: h, minutes: m, seconds: s };
-
     }
 
     const countDown = () => (setCountDownLength(countDownLength => countDownLength - 1));
@@ -160,7 +150,7 @@ export default function HomeScreen() {
         async function asyncFunction() {
             await loadSoundFiles();
         }
-
+        
         asyncFunction();
     }, [])
 
@@ -172,11 +162,13 @@ export default function HomeScreen() {
         const sound = sounds.find(sound => sound.name === tile.item.name)
 
         if (sound) {
-            return (<SoundTile name={tile.item.name} isDarkMode={isDarkMode}
-                darkThemeColor={tile.item.darkThemeColor}
-                lightThemeColor={tile.item.lightThemeColor}
-                iconName={tile.item.iconName}
-                soundObject={sound.soundObject} />)
+            return (
+                <SoundTile name={tile.item.name} isDarkMode={isDarkMode}
+                    darkThemeColor={tile.item.darkThemeColor}
+                    lightThemeColor={tile.item.lightThemeColor}
+                    iconName={tile.item.iconName}
+                    soundObject={sound.soundObject} />
+            )
         }
         else {
             return (<ActivityIndicator />)
@@ -268,3 +260,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     }
 });
+
+interface Dictionary<T> {
+    [Key: string]: T;
+}
+
+type CountDown = {
+    hours: number,
+    minutes: number,
+    seconds: number
+}

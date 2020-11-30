@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Animated, TextInput, SafeAreaView, TouchableHighlight, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Animated, TextInput, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 
 const TimerBottomSheet = (props: any) => {

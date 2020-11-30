@@ -1,17 +1,31 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const SoundTile = (props: any) => {
-    const { isDarkMode, name, lightThemeColor, darkThemeColor, iconName, soundObject } = props;
+    const { isDarkMode, lightThemeColor, darkThemeColor, iconName, soundObject } = props;
 
     const scale = useRef(new Animated.Value(1)).current;
     const [isPlaying, setIsPlaying] = useState(false);
 
     const containerBackgroundColor = isDarkMode ? darkThemeColor : lightThemeColor;
     const iconColor = isDarkMode ? "#202020" : "white";
+
+    useEffect(() => {
+
+        if(!soundObject.isPlaying()){
+            console.log(iconName + " is not playing");
+                        
+            setIsPlaying(false);
+        }
+        else{
+            console.log(iconName + " is playing");
+
+        }
+                
+    }, [props])
 
     const spring = () => {
         Animated.sequence([
