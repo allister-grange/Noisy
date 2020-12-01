@@ -72,6 +72,8 @@ const TimerBottomSheet = (props: any) => {
                             value={timerLength.seconds.toString()}
                             keyboardType='number-pad'
                             placeholder="0s"
+                            // disableFullscreenUI={true}
+                            scrollEnabled={false}
                             editable={editable}
                         />
                         <Text style={{ color: textColor, fontSize: 12, paddingTop: 3 }}>seconds</Text>

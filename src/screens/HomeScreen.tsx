@@ -8,6 +8,8 @@ import Sound from "react-native-sound";
 import VolumeBottomSheet from '../components/VolumeBottomSheet';
 import TimerBottomSheet from '../components/TimerBottomSheet';
 import { Modalize } from 'react-native-modalize';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
+
 
 export default function HomeScreen() {
 
@@ -39,6 +41,13 @@ export default function HomeScreen() {
 
     useEffect(() => {
 
+        if (isDarkMode) {
+            changeNavigationBarColor('#252525', false, false);
+        }
+        else {
+            changeNavigationBarColor('#ffffff', true, false);
+        }
+
         setTimerLength(formatTimeLeft(countDownLength));
 
         if (countDownLength > 1 && !isTiming) {
@@ -52,7 +61,7 @@ export default function HomeScreen() {
             stopAllSounds();
         }
 
-    }, [countDownLength, isTiming])
+    }, [countDownLength, isTiming, isDarkMode])
 
     const stopAllSounds = () => (
         sounds.map((sound: SoundType) => {
@@ -150,11 +159,12 @@ export default function HomeScreen() {
         async function asyncFunction() {
             await loadSoundFiles();
         }
-        
+
         asyncFunction();
     }, [])
 
     const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
+    const statusBarColor = isDarkMode ? '#252525' : 'white';
     const containerTheme = isDarkMode ? GlobalStyles.darkThemeContainer : GlobalStyles.lightThemeContainer;
 
     const renderTile = (tile: any) => {
@@ -178,9 +188,9 @@ export default function HomeScreen() {
     return (
         <>
             <SafeAreaView style={[containerTheme, styles.container]}>
-                <StatusBar barStyle={statusBarStyle} />
+                <StatusBar barStyle={statusBarStyle} backgroundColor={statusBarColor} />
 
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, paddingTop: 20 }}>
                     {
                         loadedAudioFiles &&
                         <FlatList
@@ -243,14 +253,9 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
     },
     toolbar: {
-        paddingTop: 15,
-        paddingBottom: 15,
-        paddingLeft: 12,
-        paddingRight: 12,
-        bottom: '5%',
+        bottom: '2%',
         width: '99%',
         alignSelf: 'center',
         height: '10%',

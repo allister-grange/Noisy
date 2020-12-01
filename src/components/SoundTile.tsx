@@ -15,14 +15,8 @@ const SoundTile = (props: any) => {
 
     useEffect(() => {
 
-        if(!soundObject.isPlaying()){
-            console.log(iconName + " is not playing");
-                        
+        if(!soundObject.isPlaying()){                        
             setIsPlaying(false);
-        }
-        else{
-            console.log(iconName + " is playing");
-
         }
                 
     }, [props])
