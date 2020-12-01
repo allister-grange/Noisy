@@ -18,7 +18,7 @@ export default function HomeScreen() {
     const [sounds, setSounds] = useState([] as Array<SoundType>);
     const [timerLength, setTimerLength] = useState({ hours: 0, minutes: 0, seconds: 0 });
     const [countDownLength, setCountDownLength] = useState(0);
-    const [isCounting, setIsCounting] = useState(false);
+    const [isTiming, setisTiming] = useState(false);
     const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
 
     const timerModalRef = useRef<Modalize>(null);
@@ -41,18 +41,18 @@ export default function HomeScreen() {
 
         setTimerLength(formatTimeLeft(countDownLength));
 
-        if (countDownLength > 1 && !isCounting) {
-            setIsCounting(true);
+        if (countDownLength > 1 && !isTiming) {
+            setisTiming(true);
             let interval = setInterval(countDown, 1000);
             setIntervalVar(interval);
         }
         else if (countDownLength == 0) {
-            setIsCounting(false);
+            setisTiming(false);
             clearInterval(intervalVar);
             stopAllSounds();
         }
 
-    }, [countDownLength, isCounting])
+    }, [countDownLength, isTiming])
 
     const stopAllSounds = () => (
         sounds.map((sound: SoundType) => {
@@ -201,6 +201,8 @@ export default function HomeScreen() {
                         setIsDarkMode={setIsDarkMode}
                         openTimerModal={openTimerModal}
                         openVolumeModal={openVolumeModal}
+                        timerLength={timerLength}
+                        isTiming={isTiming}
                     />
                 </View>
             </SafeAreaView>
@@ -216,7 +218,7 @@ export default function HomeScreen() {
                     setTimerLength={setTimerLength}
                     timerLength={timerLength}
                     startTimer={startTimer}
-                    isCounting={isCounting}
+                    isTiming={isTiming}
                     resetTimer={resetTimer}
                 />
             </Modalize>
@@ -248,7 +250,7 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         paddingLeft: 12,
         paddingRight: 12,
-        bottom: '3%',
+        bottom: '5%',
         width: '99%',
         alignSelf: 'center',
         height: '10%',

@@ -5,13 +5,13 @@ import GlobalStyles from '../styles/GlobalStyles';
 const TimerBottomSheet = (props: any) => {
 
     const { isDarkMode, setTimerLength, timerLength, 
-            startTimer, isCounting, resetTimer } = props;
+            startTimer, isTiming, resetTimer } = props;
 
     const containerBackgroundColor = isDarkMode ?
         GlobalStyles.darkThemeModalContainer : GlobalStyles.lightThemeModalContainer;
     const textColor = isDarkMode ? "white" : "black";
     const borderColor = isDarkMode ? "white" : "grey";
-    const editable = isCounting ? false : true;
+    const editable = isTiming ? false : true;
 
     const onMinuteChange = (time: any) => {
         if (time <= 99)
@@ -79,7 +79,7 @@ const TimerBottomSheet = (props: any) => {
                     
                 </View>
 
-                {isCounting ?
+                {isTiming ?
                     <View style={styles.timerButtonContainer}>
                         <TouchableOpacity
                             style={{ width: '15%', height: '100%' }}
