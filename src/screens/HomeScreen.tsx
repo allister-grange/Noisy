@@ -9,7 +9,7 @@ import VolumeBottomSheet from '../components/VolumeBottomSheet';
 import TimerBottomSheet from '../components/TimerBottomSheet';
 import { Modalize } from 'react-native-modalize';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
-
+import MusicControl, { Command } from 'react-native-music-control'
 
 export default function HomeScreen() {
 
@@ -38,6 +38,14 @@ export default function HomeScreen() {
     const openVolumeModal = () => {
         volumeModalRef.current?.open();
     };
+
+    useEffect(() => {
+        MusicControl.enableBackgroundMode(true);
+        MusicControl.handleAudioInterruptions(true);
+        MusicControl.on('play' as Command, play)
+        MusicControl.on('pause' as Command, pause)
+        play()
+    }, [])
 
     useEffect(() => {
 
@@ -70,6 +78,29 @@ export default function HomeScreen() {
             }
         })
     );
+
+    const play = () => {
+        console.log("here");
+        
+        MusicControl.setNowPlaying({
+            title: 'Billie Jean',
+            artwork: 'https://i.imgur.com/e1cpwdo.png',
+            artist: 'Michael Jackson',
+            album: 'Thriller',
+            genre: 'Post-disco, Rhythm and Blues, Funk, Dance-pop',
+            duration: 20,
+            description: 'Billie Jean is a song by American singer Michael Jackson. It is the second single from the singer\'s sixth solo album, Thriller (1982). It was written and composed by Jackson and produced by Jackson and Quincy Jones.',
+            date: '1983-01-02T00:00:00Z',
+            rating: 84
+          })
+          MusicControl.enableControl('play', false)
+          MusicControl.enableControl('pause', true)
+      
+    }
+
+    const pause = () => {
+        
+    }
 
     const triggerFadeOut = async (sound: SoundType, count: number) => {
         if (count == 0) {

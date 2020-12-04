@@ -47,6 +47,7 @@ const SoundTile = (props: any) => {
         try {
             await soundObject.play();
             soundObject.setCategory('Playback');
+            // soundObject.setCategory(false, 'mixWithOthers')
         } catch (error) {
             console.error(error);
         }
