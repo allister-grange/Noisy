@@ -27,10 +27,10 @@ const SoundTile = (props: any) => {
             Animated.spring(scale, { toValue: 1, speed: 200, useNativeDriver: true }),
         ]).start(() => {
             if (isPlaying) {
-                pauseSound()
+                pauseSound();
             }
             else {
-                playSound()
+                playSound();
             }
 
             setIsPlaying(!isPlaying);
@@ -44,6 +44,7 @@ const SoundTile = (props: any) => {
     const playSound = async () => {
         try {
             await soundObject.play();
+            soundObject.setCategory('Playback');
         } catch (error) {
             console.error(error);
         }
