@@ -42,9 +42,14 @@ export default function HomeScreen() {
     useEffect(() => {
         MusicControl.enableBackgroundMode(true);
         MusicControl.handleAudioInterruptions(true);
-        MusicControl.on('play' as Command, play)
-        MusicControl.on('pause' as Command, pause)
-        play()
+        MusicControl.on('play' as Command, play);
+        MusicControl.on('pause' as Command, pause);
+        MusicControl.setNowPlaying({
+            title: 'noisy',
+            artwork: require('./../../assets/1024.png'),
+            artist: 'noisy',
+          });
+        play();
     }, [])
 
     useEffect(() => {
@@ -80,26 +85,14 @@ export default function HomeScreen() {
     );
 
     const play = () => {
-        console.log("here");
-        
-        MusicControl.setNowPlaying({
-            title: 'Billie Jean',
-            artwork: 'https://i.imgur.com/e1cpwdo.png',
-            artist: 'Michael Jackson',
-            album: 'Thriller',
-            genre: 'Post-disco, Rhythm and Blues, Funk, Dance-pop',
-            duration: 20,
-            description: 'Billie Jean is a song by American singer Michael Jackson. It is the second single from the singer\'s sixth solo album, Thriller (1982). It was written and composed by Jackson and produced by Jackson and Quincy Jones.',
-            date: '1983-01-02T00:00:00Z',
-            rating: 84
-          })
-          MusicControl.enableControl('play', false)
-          MusicControl.enableControl('pause', true)
+          MusicControl.enableControl('play', false);
+          MusicControl.enableControl('pause', true);
       
     }
 
     const pause = () => {
-        
+        MusicControl.enableControl('play', true);
+        MusicControl.enableControl('pause', false);
     }
 
     const triggerFadeOut = async (sound: SoundType, count: number) => {
