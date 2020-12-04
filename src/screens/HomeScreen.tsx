@@ -129,6 +129,8 @@ export default function HomeScreen() {
             train: require('../../assets/sounds/train.mp3'),
             white: require('../../assets/sounds/white.mp3'),
             wind: require('../../assets/sounds/wind.mp3'),
+            oceanWaves: require('../../assets/sounds/oceanWaves.mp3'),
+            blackNoise: require('../../assets/sounds/blackNoise.mp3'),
         };
 
         tileData.forEach(tile => {

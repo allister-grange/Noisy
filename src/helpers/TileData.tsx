@@ -17,7 +17,7 @@ export const tileData = [
     },
     {
         id: 3,
-        iconName: "md-train",
+        iconName: "train",
         darkThemeColor: "",
         lightThemeColor: "#ED7067",
         isPlaying: false,
@@ -49,11 +49,11 @@ export const tileData = [
     },
     {
         id: 7,
-        iconName: "train",
+        iconName: "multitrack-audio",
         darkThemeColor: "",
         lightThemeColor: "#F3B0C3",
         isPlaying: false,
-        name: "train"
+        name: "blackNoise"
     },
     {
         id: 8,
@@ -61,7 +61,7 @@ export const tileData = [
         darkThemeColor: "",
         lightThemeColor: "#6BE5FF",
         isPlaying: false,
-        name: "rain"
+        name: "oceanWaves"
     },
     {
         id: 9,

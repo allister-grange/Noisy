@@ -3,6 +3,7 @@ import { Animated, StyleSheet, Dimensions, TouchableOpacity, View } from 'react-
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const SoundTile = (props: any) => {
     const { isDarkMode, lightThemeColor, darkThemeColor, iconName, soundObject } = props;
@@ -38,6 +39,7 @@ const SoundTile = (props: any) => {
     };
 
     const materialCommunityIcons = ['waves', 'fan', 'equalizer', 'piano']
+    const materialIcons = ['multitrack-audio']
     const ionIcons = ['ios-thunderstorm', 'md-train', 'ios-water', 'ios-rainy', 'ios-bonfire', 'ios-moon']
     const fontAwesome5 = ['car', 'train', 'tree', 'kiwi-bird', 'coffee', 'wind', 'leaf', 'guitar']
 
@@ -75,6 +77,7 @@ const SoundTile = (props: any) => {
                     {ionIcons.includes(iconName) && <Ionicons name={iconName} size={55} color={iconColor} />}
                     {materialCommunityIcons.includes(iconName) && <MaterialCommunityIcons name={iconName} size={55} color={iconColor} />}
                     {fontAwesome5.includes(iconName) && <FontAwesome5 name={iconName} size={40} color={iconColor} />}
+                    {materialIcons.includes(iconName) && <MaterialIcons name={iconName} size={40} color={iconColor} />}
 
                 </View>
             </Animated.View>
