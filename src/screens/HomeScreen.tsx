@@ -55,7 +55,7 @@ export default function HomeScreen() {
             let interval = setInterval(countDown, 1000);
             setIntervalVar(interval);
         }
-        else if (countDownLength == 0) {
+        else if (countDownLength == 0 && isTiming) {
             setisTiming(false);
             clearInterval(intervalVar);
             stopAllSounds();
