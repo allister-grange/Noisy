@@ -85,8 +85,6 @@ export default function HomeScreen() {
     );
 
     const play = () => {
-        console.log("calling play");
-        
         MusicControl.enableControl('play', true);
         MusicControl.enableControl('pause', false);
         stopAllSounds();
@@ -100,11 +98,12 @@ export default function HomeScreen() {
 
     const triggerFadeOut = async (sound: SoundType, count: number) => {
         if (count == 0) {
-            sound.soundObject.setVolume(0.5);
-            sound.soundObject.stop();
-            sound.soundObject.pause();
-            //todo set the sound correctly here s
-            setSounds(oldSounds => [...oldSounds])
+            let newSounds = [...sounds];
+            let foundSound = newSounds.find(searchedSound => searchedSound.name == sound.name);
+            foundSound?.soundObject.stop(() => {
+                foundSound?.soundObject.setVolume(0.5);
+                setSounds(newSounds);
+            });
             return;
         }
         sound.soundObject.setVolume(sound.soundObject.getVolume() / 1.25)
@@ -189,14 +188,16 @@ export default function HomeScreen() {
 
     const pauseSound = (tileName: string) => {
         let newSounds = [...sounds]
-        newSounds.find(sound => sound.name === tileName)?.soundObject.pause();
-        setSounds(newSounds);
+        newSounds.find(sound => sound.name === tileName)?.soundObject.pause(() => {
+            setSounds(newSounds);
+        });
     }
 
     const playSound = (tileName: string) => {
         let newSounds = [...sounds]
-        newSounds.find(sound => sound.name === tileName)?.soundObject.play();
-        setSounds(newSounds);
+        newSounds.find(sound => sound.name === tileName)?.soundObject.play((success) => {
+            setSounds(newSounds);
+        });
     }
 
     useEffect(() => {
@@ -214,7 +215,7 @@ export default function HomeScreen() {
     const renderTile = (tile: any) => {
 
         const sound = sounds.find(sound => sound.name === tile.item.name)
-
+        //todo, leaf and tree icons use the same sounds atm
         if (sound) {
             return (
                 <SoundTile name={tile.item.name} isDarkMode={isDarkMode}

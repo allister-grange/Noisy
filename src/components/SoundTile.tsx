@@ -16,14 +16,10 @@ const SoundTile = (props: any) => {
     const iconColor = isDarkMode ? "#202020" : "white";
 
     useEffect(() => {
-
-        // setIsPlaying(soundObject.isPlaying())
-
-        // if(!soundObject.isPlaying()){                        
-        //     setIsPlaying(false);
-        // }
+        
+        setIsPlaying(soundObject.isPlaying())
                 
-    } )
+    }, [props] )
 
     const spring = () => {
         Animated.sequence([
@@ -33,12 +29,12 @@ const SoundTile = (props: any) => {
 
             if (isPlaying) {
                 pauseSound(name);
+                setIsPlaying(false);
             }
             else {
                 playSound(name);
+                setIsPlaying(true);
             }
-
-            setIsPlaying(!isPlaying);
         });
     };
 
