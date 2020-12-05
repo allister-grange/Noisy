@@ -48,7 +48,7 @@ export default function HomeScreen() {
             title: 'noisy',
             artwork: require('./../../assets/1024.png'),
             artist: 'noisy',
-          });
+        });
         play();
     }, [])
 
@@ -85,24 +85,30 @@ export default function HomeScreen() {
     );
 
     const play = () => {
-          MusicControl.enableControl('play', false);
-          MusicControl.enableControl('pause', true);
-      
+        console.log("calling play");
+        
+        MusicControl.enableControl('play', true);
+        MusicControl.enableControl('pause', false);
+        stopAllSounds();
     }
 
     const pause = () => {
-        MusicControl.enableControl('play', true);
-        MusicControl.enableControl('pause', false);
+        MusicControl.enableControl('play', false);
+        MusicControl.enableControl('pause', true);
+        stopAllSounds();
     }
 
     const triggerFadeOut = async (sound: SoundType, count: number) => {
         if (count == 0) {
+            sound.soundObject.setVolume(0.5);
             sound.soundObject.stop();
+            sound.soundObject.pause();
+            //todo set the sound correctly here s
             setSounds(oldSounds => [...oldSounds])
             return;
         }
         sound.soundObject.setVolume(sound.soundObject.getVolume() / 1.25)
-        await delay(150);
+        await delay(100);
         triggerFadeOut(sound, count - 1);
     }
 
@@ -181,6 +187,18 @@ export default function HomeScreen() {
         sound.soundObject.setVolume(volume)
     }
 
+    const pauseSound = (tileName: string) => {
+        let newSounds = [...sounds]
+        newSounds.find(sound => sound.name === tileName)?.soundObject.pause();
+        setSounds(newSounds);
+    }
+
+    const playSound = (tileName: string) => {
+        let newSounds = [...sounds]
+        newSounds.find(sound => sound.name === tileName)?.soundObject.play();
+        setSounds(newSounds);
+    }
+
     useEffect(() => {
         async function asyncFunction() {
             await loadSoundFiles();
@@ -203,7 +221,9 @@ export default function HomeScreen() {
                     darkThemeColor={tile.item.darkThemeColor}
                     lightThemeColor={tile.item.lightThemeColor}
                     iconName={tile.item.iconName}
-                    soundObject={sound.soundObject} />
+                    soundObject={sound.soundObject}
+                    pauseSound={pauseSound}
+                    playSound={playSound} />
             )
         }
         else {

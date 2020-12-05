@@ -6,7 +6,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const SoundTile = (props: any) => {
-    const { isDarkMode, lightThemeColor, darkThemeColor, iconName, soundObject } = props;
+    const { isDarkMode, lightThemeColor, darkThemeColor, iconName, 
+            soundObject, pauseSound, playSound, name } = props;
 
     const scale = useRef(new Animated.Value(1)).current;
     const [isPlaying, setIsPlaying] = useState(false);
@@ -16,22 +17,25 @@ const SoundTile = (props: any) => {
 
     useEffect(() => {
 
-        if(!soundObject.isPlaying()){                        
-            setIsPlaying(false);
-        }
+        // setIsPlaying(soundObject.isPlaying())
+
+        // if(!soundObject.isPlaying()){                        
+        //     setIsPlaying(false);
+        // }
                 
-    }, [props])
+    } )
 
     const spring = () => {
         Animated.sequence([
             Animated.spring(scale, { toValue: 1.1, speed: 200, useNativeDriver: true }),
             Animated.spring(scale, { toValue: 1, speed: 200, useNativeDriver: true }),
         ]).start(() => {
+
             if (isPlaying) {
-                pauseSound();
+                pauseSound(name);
             }
             else {
-                playSound();
+                playSound(name);
             }
 
             setIsPlaying(!isPlaying);
@@ -42,24 +46,6 @@ const SoundTile = (props: any) => {
     const materialIcons = ['multitrack-audio']
     const ionIcons = ['ios-thunderstorm', 'md-train', 'ios-water', 'ios-rainy', 'ios-bonfire', 'ios-moon']
     const fontAwesome5 = ['car', 'train', 'tree', 'kiwi-bird', 'coffee', 'wind', 'leaf', 'guitar']
-
-    const playSound = async () => {
-        try {
-            await soundObject.play();
-            soundObject.setCategory('Playback');
-            // soundObject.setCategory(false, 'mixWithOthers')
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const pauseSound = async () => {
-        try {
-            await soundObject.pause();
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     return (
         <TouchableOpacity
