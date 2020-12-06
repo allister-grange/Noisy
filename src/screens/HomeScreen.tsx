@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator, Text } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator, Text, Platform } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
@@ -28,7 +28,8 @@ export default function HomeScreen() {
 
     type SoundType = {
         name: string,
-        soundObject: Sound
+        soundObject: Sound,
+        wasPlaying: boolean
     }
 
     const openTimerModal = () => {
@@ -40,16 +41,23 @@ export default function HomeScreen() {
     };
 
     useEffect(() => {
+        if (Platform.OS === 'ios') {
+            MusicControl.handleAudioInterruptions(true)
+        }
+
         MusicControl.enableBackgroundMode(true);
-        MusicControl.handleAudioInterruptions(true);
         MusicControl.on('play' as Command, play);
         MusicControl.on('pause' as Command, pause);
+        MusicControl.enableControl('play', true);
+        MusicControl.enableControl('pause', true);
+
         MusicControl.setNowPlaying({
             title: 'noisy',
             artwork: require('./../../assets/1024.png'),
             artist: 'noisy',
         });
-        play();
+
+        // play();
     }, [])
 
     useEffect(() => {
@@ -71,12 +79,12 @@ export default function HomeScreen() {
         else if (countDownLength == 0 && isTiming) {
             setisTiming(false);
             clearInterval(intervalVar);
-            stopAllSounds();
+            fadeAllSounds();
         }
 
     }, [countDownLength, isTiming, isDarkMode])
 
-    const stopAllSounds = () => (
+    const fadeAllSounds = () => (
         sounds.map((sound: SoundType) => {
             if (sound.soundObject.isPlaying()) {
                 triggerFadeOut(sound, 20);
@@ -84,16 +92,36 @@ export default function HomeScreen() {
         })
     );
 
+    const pauseAllSounds = () => {
+        console.log("pausing all sounds called");
+
+        let newSounds = [...sounds]
+        newSounds.map(sound => {
+            if (sound.soundObject.isPlaying()) {
+                sound.soundObject.pause(() => {
+                    console.log("pauing sound " + sound.name);
+                    sound.wasPlaying = true;
+                    setSounds(newSounds);
+                });
+            }
+        });
+    };
+
+
     const play = () => {
-        MusicControl.enableControl('play', true);
-        MusicControl.enableControl('pause', false);
-        stopAllSounds();
+        console.log("playing");
+
+        // MusicControl.enableControl('play', false)
+        // MusicControl.enableControl('pause', true)
     }
 
     const pause = () => {
-        MusicControl.enableControl('play', false);
-        MusicControl.enableControl('pause', true);
-        stopAllSounds();
+        console.log("pausing");
+
+        // MusicControl.enableControl('play', true);
+        // MusicControl.enableControl('pause', false);
+        pauseAllSounds();
+        // fadeAllSounds();
     }
 
     const triggerFadeOut = async (sound: SoundType, count: number) => {
@@ -172,7 +200,7 @@ export default function HomeScreen() {
 
                 whoosh.setNumberOfLoops(-1);
                 whoosh.setVolume(0.5);
-                let newSound = { "name": tile.name, "soundObject": whoosh };
+                let newSound = { "name": tile.name, "soundObject": whoosh, wasPlaying: false };
 
                 setSounds(prevArray => [...prevArray, newSound]);
             })
