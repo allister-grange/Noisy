@@ -26,38 +26,13 @@ export default function HomeScreen() {
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
 
-    type SoundType = {
-        name: string,
-        soundObject: Sound,
-        wasPlaying: boolean
-    }
-
-    const openTimerModal = () => {
-        timerModalRef.current?.open();
-    };
-
-    const openVolumeModal = () => {
-        volumeModalRef.current?.open();
-    };
-
     useEffect(() => {
-        if (Platform.OS === 'ios') {
-            MusicControl.handleAudioInterruptions(true)
+        async function asyncFunction() {
+            await loadSoundFiles();
+            // await setUpMusicControls();
         }
 
-        MusicControl.enableBackgroundMode(true);
-        MusicControl.on('play' as Command, play);
-        MusicControl.on('pause' as Command, pause);
-        MusicControl.enableControl('play', true);
-        MusicControl.enableControl('pause', true);
-
-        MusicControl.setNowPlaying({
-            title: 'noisy',
-            artwork: require('./../../assets/1024.png'),
-            artist: 'noisy',
-        });
-
-        // play();
+        asyncFunction();
     }, [])
 
     useEffect(() => {
@@ -93,13 +68,11 @@ export default function HomeScreen() {
     );
 
     const pauseAllSounds = () => {
-        console.log("pausing all sounds called");
+        let newSounds = [...sounds];        
 
-        let newSounds = [...sounds]
         newSounds.map(sound => {
             if (sound.soundObject.isPlaying()) {
                 sound.soundObject.pause(() => {
-                    console.log("pauing sound " + sound.name);
                     sound.wasPlaying = true;
                     setSounds(newSounds);
                 });
@@ -107,21 +80,30 @@ export default function HomeScreen() {
         });
     };
 
-
     const play = () => {
-        console.log("playing");
 
-        // MusicControl.enableControl('play', false)
-        // MusicControl.enableControl('pause', true)
+        let newSounds = [...sounds]
+        newSounds.map(sound => {
+            if (sound.wasPlaying) {
+                sound.soundObject.play(() => {
+                    sound.wasPlaying = false;
+                    setSounds(newSounds);
+                });
+            }
+        });
+
+        MusicControl.updatePlayback({
+            state: MusicControl.STATE_PLAYING
+        });
     }
 
     const pause = () => {
-        console.log("pausing");
-
-        // MusicControl.enableControl('play', true);
-        // MusicControl.enableControl('pause', false);
         pauseAllSounds();
-        // fadeAllSounds();
+
+        MusicControl.updatePlayback({
+            state: MusicControl.STATE_PAUSED
+        });
+
     }
 
     const triggerFadeOut = async (sound: SoundType, count: number) => {
@@ -155,6 +137,14 @@ export default function HomeScreen() {
 
         setCountDownLength(totalTimeLengthInSeconds);
     }
+
+    const openTimerModal = () => {
+        timerModalRef.current?.open();
+    };
+
+    const openVolumeModal = () => {
+        volumeModalRef.current?.open();
+    };
 
     const formatTimeLeft = (timeLeft: number): CountDown => {
 
@@ -190,7 +180,7 @@ export default function HomeScreen() {
             blackNoise: require('../../assets/sounds/blackNoise.mp3'),
         };
 
-        tileData.forEach(tile => {
+        tileData.forEach((tile, idx) => {
 
             let whoosh: Sound = new Sound(soundFilesPath[tile.name], (error) => {
                 if (error) {
@@ -201,13 +191,17 @@ export default function HomeScreen() {
                 whoosh.setNumberOfLoops(-1);
                 whoosh.setVolume(0.5);
                 let newSound = { "name": tile.name, "soundObject": whoosh, wasPlaying: false };
-
+                
                 setSounds(prevArray => [...prevArray, newSound]);
-            })
 
-        });
+                if(idx == tileData.length - 1){
+                    setLoadedAudioFiles(true);
+                    setUpMusicControls();
+                }
+            });
 
-        setLoadedAudioFiles(true);
+        });       
+        
     };
 
     const changeVolumeOfSound = (sound: any, volume: number) => {
@@ -216,6 +210,7 @@ export default function HomeScreen() {
 
     const pauseSound = (tileName: string) => {
         let newSounds = [...sounds]
+
         newSounds.find(sound => sound.name === tileName)?.soundObject.pause(() => {
             setSounds(newSounds);
         });
@@ -223,18 +218,32 @@ export default function HomeScreen() {
 
     const playSound = (tileName: string) => {
         let newSounds = [...sounds]
+
         newSounds.find(sound => sound.name === tileName)?.soundObject.play((success) => {
             setSounds(newSounds);
         });
     }
 
-    useEffect(() => {
-        async function asyncFunction() {
-            await loadSoundFiles();
+    const setUpMusicControls = async () => {
+
+        if (Platform.OS === 'ios') {
+            MusicControl.handleAudioInterruptions(true)
         }
 
-        asyncFunction();
-    }, [])
+        MusicControl.enableBackgroundMode(true);
+        
+        MusicControl.on(Command.play, play);
+        MusicControl.on(Command.pause, pause);
+
+        MusicControl.enableControl('play', true);
+        MusicControl.enableControl('pause', true);
+
+        MusicControl.setNowPlaying({
+            title: 'noisy',
+            artwork: require('./../../assets/1024.png'),
+            artist: 'noisy',
+        });
+    }
 
     const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
     const statusBarColor = isDarkMode ? '#252525' : 'white';
@@ -351,4 +360,10 @@ type CountDown = {
     hours: number,
     minutes: number,
     seconds: number
+}
+
+type SoundType = {
+    name: string,
+    soundObject: Sound,
+    wasPlaying: boolean
 }
