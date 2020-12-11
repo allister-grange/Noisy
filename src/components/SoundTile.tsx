@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const SoundTile = (props: any) => {
     const { isDarkMode, lightThemeColor, darkThemeColor, iconName, 
-            soundObject, pauseSound, playSound, name } = props;
+            soundObject, pauseSound, playSound, name, soundPlaying} = props;
 
     const scale = useRef(new Animated.Value(1)).current;
     const [isPlaying, setIsPlaying] = useState(false);
@@ -17,7 +17,7 @@ const SoundTile = (props: any) => {
 
     useEffect(() => {
         
-        setIsPlaying(soundObject.isPlaying())
+        setIsPlaying(soundPlaying)
                 
     }, [props] )
 
@@ -27,7 +27,7 @@ const SoundTile = (props: any) => {
             Animated.spring(scale, { toValue: 1, speed: 200, useNativeDriver: true }),
         ]).start(() => {
 
-            if (isPlaying) {
+            if (isPlaying) {                
                 pauseSound(name);
                 setIsPlaying(false);
             }
@@ -48,7 +48,6 @@ const SoundTile = (props: any) => {
             activeOpacity={1}
             onPress={() => {
                 spring();
-                playSound();
             }
             }>
             <Animated.View style={{ transform: [{ scale }] }}>
