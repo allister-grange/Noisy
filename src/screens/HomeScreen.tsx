@@ -24,6 +24,7 @@ export default function HomeScreen() {
     const [countDownLength, setCountDownLength] = useState(0);
     const [isTiming, setisTiming] = useState(false);
     const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
+    const stateRef = useRef([] as Array<SoundType>);
 
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
@@ -75,7 +76,8 @@ export default function HomeScreen() {
             newSoundsForStorage.push(newSound);
         });
 
-        setSoundsForStorage(newSoundsForStorage);
+        stateRef.current = sounds;            
+        setSoundsForStorage(newSoundsForStorage);        
 
     }, [sounds]);
 
@@ -142,7 +144,7 @@ export default function HomeScreen() {
     );
 
     const pauseAllSounds = () => {
-        let newSounds = [...sounds];
+        let newSounds = stateRef.current;
         
         newSounds.map(sound => {
             if (sound.isPlaying) {
@@ -158,7 +160,7 @@ export default function HomeScreen() {
 
     const play = () => {
 
-        let newSounds = [...sounds];
+        let newSounds = stateRef.current
         
         newSounds.map(sound => {
             if (sound.wasPlaying) {
@@ -381,6 +383,10 @@ export default function HomeScreen() {
             title: 'noisy',
             artwork: require('./../../assets/1024.png'),
             artist: 'noisy',
+        });
+
+        MusicControl.updatePlayback({
+            state: MusicControl.STATE_PLAYING
         });
     }
 

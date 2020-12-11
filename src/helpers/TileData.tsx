@@ -50,7 +50,7 @@ export const tileData = [
     {
         id: 7,
         iconName: "multitrack-audio",
-        darkThemeColor: "#F3B0C3s",
+        darkThemeColor: "#F3B0C3",
         lightThemeColor: "#F3B0C3",
         isPlaying: false,
         name: "blackNoise"
