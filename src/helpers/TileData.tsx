@@ -2,7 +2,7 @@ export const tileData = [
     {
         id: 1,
         iconName: "ios-rainy",
-        darkThemeColor: "",
+        darkThemeColor: "#7BC4F5",
         lightThemeColor: "#7BC4F5",
         isPlaying: false,
         name: "rain"
@@ -10,7 +10,7 @@ export const tileData = [
     {
         id: 2,
         iconName: "ios-thunderstorm",
-        darkThemeColor: "",
+        darkThemeColor: "#623BF5",
         lightThemeColor: "#623BF5",
         isPlaying: false,
         name: "thunder"
@@ -18,7 +18,7 @@ export const tileData = [
     {
         id: 3,
         iconName: "train",
-        darkThemeColor: "",
+        darkThemeColor: "#ED7067",
         lightThemeColor: "#ED7067",
         isPlaying: false,
         name: "train"
@@ -26,7 +26,7 @@ export const tileData = [
     {
         id: 4,
         iconName: "ios-water",
-        darkThemeColor: "",
+        darkThemeColor: "#6988F2",
         lightThemeColor: "#6988F2",
         isPlaying: false,
         name: "river"
@@ -34,7 +34,7 @@ export const tileData = [
     {
         id: 5,
         iconName: "tree",
-        darkThemeColor: "",
+        darkThemeColor: "#97C1A9",
         lightThemeColor: "#97C1A9",
         isPlaying: false,
         name: "forest"
@@ -42,7 +42,7 @@ export const tileData = [
     {
         id: 6,
         iconName: "car",
-        darkThemeColor: "",
+        darkThemeColor: "#ABDEE6",
         lightThemeColor: "#ABDEE6",
         isPlaying: false,
         name: "car"
@@ -50,7 +50,7 @@ export const tileData = [
     {
         id: 7,
         iconName: "multitrack-audio",
-        darkThemeColor: "",
+        darkThemeColor: "#F3B0C3s",
         lightThemeColor: "#F3B0C3",
         isPlaying: false,
         name: "blackNoise"
@@ -58,7 +58,7 @@ export const tileData = [
     {
         id: 8,
         iconName: "waves",
-        darkThemeColor: "",
+        darkThemeColor: "#6BE5FF",
         lightThemeColor: "#6BE5FF",
         isPlaying: false,
         name: "oceanWaves"
@@ -66,7 +66,7 @@ export const tileData = [
     {
         id: 9,
         iconName: "kiwi-bird",
-        darkThemeColor: "",
+        darkThemeColor: "#FF968A",
         lightThemeColor: "#FF968A",
         isPlaying: false,
         name: "leaf"
@@ -74,7 +74,7 @@ export const tileData = [
     {
         id: 10,
         iconName: "ios-bonfire",
-        darkThemeColor: "",
+        darkThemeColor: "#FC6238",
         lightThemeColor: "#FC6238",
         isPlaying: false,
         name: "campfire"
@@ -82,7 +82,7 @@ export const tileData = [
     {
         id: 11,
         iconName: "ios-moon",
-        darkThemeColor: "",
+        darkThemeColor: "#74737A",
         lightThemeColor: "#74737A",
         isPlaying: false,
         name: "crickets"
@@ -90,7 +90,7 @@ export const tileData = [
     {
         id: 12,
         iconName: "fan",
-        darkThemeColor: "",
+        darkThemeColor: "#00CDAC",
         lightThemeColor: "#00CDAC",
         isPlaying: false,
         name: "fan"
@@ -98,7 +98,7 @@ export const tileData = [
     {
         id: 13,
         iconName: "coffee",
-        darkThemeColor: "",
+        darkThemeColor: "#987C64",
         lightThemeColor: "#987C64",
         isPlaying: false,
         name: "office"
@@ -106,7 +106,7 @@ export const tileData = [
     {
         id: 14,
         iconName: "wind",
-        darkThemeColor: "",
+        darkThemeColor: "#349FA4",
         lightThemeColor: "#349FA4",
         isPlaying: false,
         name: "wind"
@@ -114,7 +114,7 @@ export const tileData = [
     {
         id: 15,
         iconName: "leaf",
-        darkThemeColor: "",
+        darkThemeColor: "#6EB5FF",
         lightThemeColor: "#6EB5FF",
         isPlaying: false,
         name: "forest"
@@ -122,7 +122,7 @@ export const tileData = [
     {
         id: 16,
         iconName: "equalizer",
-        darkThemeColor: "",
+        darkThemeColor: "#A79AFF",
         lightThemeColor: "#A79AFF",
         isPlaying: false,
         name: "white"
@@ -130,7 +130,7 @@ export const tileData = [
     {
         id: 17,
         iconName: "guitar",
-        darkThemeColor: "",
+        darkThemeColor: "#FFABAB",
         lightThemeColor: "#FFABAB",
         isPlaying: false,
         name: "guitar"
@@ -138,7 +138,7 @@ export const tileData = [
     {
         id: 18,
         iconName: "piano",
-        darkThemeColor: "",
+        darkThemeColor: "#B28DFF",
         lightThemeColor: "#B28DFF",
         isPlaying: false,
         name: "piano"

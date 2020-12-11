@@ -6,20 +6,20 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const SoundTile = (props: any) => {
-    const { isDarkMode, lightThemeColor, darkThemeColor, iconName, 
-            soundObject, pauseSound, playSound, name, soundPlaying} = props;
+    const { isDarkMode, lightThemeColor, darkThemeColor, iconName,
+        pauseSound, playSound, name, soundPlaying } = props;
 
     const scale = useRef(new Animated.Value(1)).current;
     const [isPlaying, setIsPlaying] = useState(false);
 
-    const containerBackgroundColor = isDarkMode ? darkThemeColor : lightThemeColor;
     const iconColor = isDarkMode ? "#202020" : "white";
+    const containerBackgroundColor = isDarkMode ? darkThemeColor : lightThemeColor;
 
     useEffect(() => {
-        
-        setIsPlaying(soundPlaying)
-                
-    }, [props] )
+
+        setIsPlaying(soundPlaying);
+
+    }, [props])
 
     const spring = () => {
         Animated.sequence([
@@ -27,7 +27,7 @@ const SoundTile = (props: any) => {
             Animated.spring(scale, { toValue: 1, speed: 200, useNativeDriver: true }),
         ]).start(() => {
 
-            if (isPlaying) {                
+            if (isPlaying) {
                 pauseSound(name);
                 setIsPlaying(false);
             }

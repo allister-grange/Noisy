@@ -29,7 +29,7 @@ export default function HomeScreen() {
     const volumeModalRef = useRef<Modalize>(null);
 
     useEffect(() => {
-        async function asyncFunction() {
+        async function loadSounds() {
             try {
                 const value = await AsyncStorage.getItem("sounds");
 
@@ -47,10 +47,23 @@ export default function HomeScreen() {
             } catch (error) {
                 console.error("No sounds in storage");
             }
+        };
 
+        async function loadDarkTheme() {
+            try {
+                const value = await AsyncStorage.getItem("theme");
+
+                if (value !== null) {
+                    setIsDarkMode(value == "true");
+                }
+
+            } catch (error) {
+                console.error("No sounds in storage");
+            }
         }
 
-        asyncFunction();
+        loadDarkTheme();
+        loadSounds();
     }, [])
 
     useEffect(() => {
@@ -64,7 +77,24 @@ export default function HomeScreen() {
 
         setSoundsForStorage(newSoundsForStorage);
 
-    }, [sounds])
+    }, [sounds]);
+
+    useEffect(() => {
+
+        if (isDarkMode) {            
+            AsyncStorage.setItem("theme", "true", (err) => {
+                if(err)
+                    console.error("error in setting theme " + err);
+            });
+        }
+        else {
+            AsyncStorage.setItem("theme", "false", (err) => {
+                if(err)
+                    console.error("error in setting theme " + err);
+            });
+        }
+
+    }, [isDarkMode]);
 
     useEffect(() => {
 
@@ -105,7 +135,7 @@ export default function HomeScreen() {
 
     const fadeAllSounds = () => (
         sounds.map((sound: SoundType) => {
-            if (sound.soundObject.isPlaying()) {
+            if (sound.isPlaying) {
                 triggerFadeOut(sound, 20);
             }
         })
@@ -113,9 +143,9 @@ export default function HomeScreen() {
 
     const pauseAllSounds = () => {
         let newSounds = [...sounds];
-
+        
         newSounds.map(sound => {
-            if (sound.soundObject.isPlaying()) {
+            if (sound.isPlaying) {
                 sound.soundObject.pause(() => {
                     sound.wasPlaying = true;
                     sound.isPlaying = false;
@@ -128,11 +158,13 @@ export default function HomeScreen() {
 
     const play = () => {
 
-        let newSounds = [...sounds]
+        let newSounds = [...sounds];
+        
         newSounds.map(sound => {
             if (sound.wasPlaying) {
                 sound.soundObject.play();
                 sound.wasPlaying = false;
+                sound.isPlaying = true;
             }
         });
 
@@ -307,11 +339,11 @@ export default function HomeScreen() {
     }
 
     const pauseSound = (tileName: string) => {
-        let newSounds = [...sounds]
+        let newSounds = [...sounds];
         let sound = newSounds.find(sound => sound.name === tileName);
 
         if (sound) {
-            sound.isPlaying = false
+            sound.isPlaying = false;
             sound.soundObject.pause(() => {
                 setSounds(newSounds);
             });
@@ -358,7 +390,8 @@ export default function HomeScreen() {
 
     const renderTile = (tile: any) => {
 
-        const sound = sounds.find(sound => sound.name === tile.item.name)
+        const sound = sounds.find(sound => sound.name === tile.item.name);
+        
         //todo, leaf and tree icons use the same sounds atm
         if (sound) {
             return (
