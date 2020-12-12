@@ -113,11 +113,11 @@ export const tileData = [
     },
     {
         id: 15,
-        iconName: "leaf",
+        iconName: "grass",
         darkThemeColor: "#6EB5FF",
         lightThemeColor: "#6EB5FF",
         isPlaying: false,
-        name: "forest"
+        name: "grass"
     },
     {
         id: 16,

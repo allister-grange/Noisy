@@ -244,6 +244,7 @@ export default function HomeScreen() {
             crickets: require('../../assets/sounds/crickets.mp3'),
             fan: require('../../assets/sounds/fan.mp3'),
             forest: require('../../assets/sounds/forest.mp3'),
+            grass: require('../../assets/sounds/grass.mp3'),
             guitar: require('../../assets/sounds/guitar.mp3'),
             leaf: require('../../assets/sounds/leaf.mp3'),
             office: require('../../assets/sounds/office.mp3'),

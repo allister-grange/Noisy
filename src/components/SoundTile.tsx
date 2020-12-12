@@ -39,7 +39,7 @@ const SoundTile = (props: any) => {
     };
 
     const materialCommunityIcons = ['waves', 'fan', 'equalizer', 'piano']
-    const materialIcons = ['multitrack-audio']
+    const materialIcons = ['multitrack-audio', 'grass']
     const ionIcons = ['ios-thunderstorm', 'md-train', 'ios-water', 'ios-rainy', 'ios-bonfire', 'ios-moon']
     const fontAwesome5 = ['car', 'train', 'tree', 'kiwi-bird', 'coffee', 'wind', 'leaf', 'guitar']
 
