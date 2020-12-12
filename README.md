@@ -1,6 +1,6 @@
 # Noisy
 
-Noisy is a background noisy generator designed to be simple and intuitive. 
+Noisy is a background noise generator designed to be simple and intuitive. 
 
 <p align="center">
     <kbd>
@@ -10,3 +10,27 @@ Noisy is a background noisy generator designed to be simple and intuitive.
         <img height=400 src="assets/screens/screenshot_3.png">
     </kbd>
 </p>
+
+## Motivation
+
+Moving from Android to ios I found that there were no good free noise generators that mimicked what I had on Android. 
+
+I wanted to build a free app that anyone could use, thus Noisy waws born! 
+
+## Tech
+
+This is all written in TypeScript using the React Native framework.
+
+The motivation behind React Native is that I wanted the application to be cross platform, as I tend to switch between Android and ios.
+
+I went for React Native so that I could also sharpen my web-dev skills at the same time as building a fun app. 
+
+The whole app is written with functional hooks.
+
+## Assets 
+
+The icons are from React-Native-Vector-Icons.
+
+The sounds files are all from [freesound](https://freesound.org/). 
+
+Thanks for looking at my app!
