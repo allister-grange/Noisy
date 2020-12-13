@@ -12,7 +12,7 @@ const SoundTile = (props: any) => {
     const fontAwesome5 = ['car', 'train', 'tree', 'kiwi-bird', 'coffee', 'wind', 'leaf', 'guitar']
 
     const { isDarkMode, lightThemeColor, darkThemeColor, iconName,
-        pauseSound, playSound, name, soundPlaying } = props;
+        name, soundPlaying, sounds, setSounds } = props;
 
     const scale = useRef(new Animated.Value(1)).current;
     const [isPlaying, setIsPlaying] = useState(false);
@@ -25,6 +25,30 @@ const SoundTile = (props: any) => {
         setIsPlaying(soundPlaying);
 
     }, [props])
+
+    const playSound = async (tileName: string) => {
+        let newSounds = [...sounds]
+        let sound = newSounds.find(sound => sound.name === tileName);
+
+        if (sound) {
+            sound.isPlaying = true;
+            sound.soundObject.play();
+        }
+
+        setSounds(newSounds);
+    }
+
+    const pauseSound = (tileName: string) => {
+        let newSounds = [...sounds];
+        let sound = newSounds.find(sound => sound.name === tileName);
+
+        if (sound) {
+            sound.isPlaying = false;
+            sound.soundObject.pause(() => {
+                setSounds(newSounds);
+            });
+        }
+    }
 
     const spring = () => {
         Animated.sequence([

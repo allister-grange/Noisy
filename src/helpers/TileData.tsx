@@ -144,3 +144,26 @@ export const tileData = [
         name: "piano"
     }
 ]
+
+export const loadAudioFromFile: any = () => {
+    return {
+        campfire: require('../../assets/sounds/campfire.mp3'),
+        car: require('../../assets/sounds/car.mp3'),
+        crickets: require('../../assets/sounds/crickets.mp3'),
+        fan: require('../../assets/sounds/fan.mp3'),
+        forest: require('../../assets/sounds/forest.mp3'),
+        grass: require('../../assets/sounds/grass.mp3'),
+        guitar: require('../../assets/sounds/guitar.mp3'),
+        leaf: require('../../assets/sounds/leaf.mp3'),
+        office: require('../../assets/sounds/office.mp3'),
+        piano: require('../../assets/sounds/piano.mp3'),
+        rain: require('../../assets/sounds/rain.mp3'),
+        river: require('../../assets/sounds/river.mp3'),
+        thunder: require('../../assets/sounds/thunder.mp3'),
+        train: require('../../assets/sounds/train.mp3'),
+        white: require('../../assets/sounds/white.mp3'),
+        wind: require('../../assets/sounds/wind.mp3'),
+        oceanWaves: require('../../assets/sounds/oceanWaves.mp3'),
+        blackNoise: require('../../assets/sounds/blackNoise.mp3'),
+    };
+}
