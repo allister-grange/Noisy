@@ -7,6 +7,7 @@ const ToolBar = (props: any) => {
 
     const { isDarkMode, setIsDarkMode, timerLength,
         openVolumeModal, openTimerModal, isTiming } = props;
+        
     const iconColor = isDarkMode ? "white" : "black";
 
     return (

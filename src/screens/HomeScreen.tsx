@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator, Text, Platform } from 'react-native';
+import { FlatList, SafeAreaView, StyleSheet, View, StatusBar, ActivityIndicator, Platform } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
 import SoundTile from '../components/SoundTile';
@@ -22,12 +22,16 @@ export default function HomeScreen() {
     const [soundsForStorage, setSoundsForStorage] = useState([] as Array<SoundsForStorageType>);
     const [timerLength, setTimerLength] = useState({ hours: 0, minutes: 0, seconds: 0 });
     const [countDownLength, setCountDownLength] = useState(0);
-    const [isTiming, setisTiming] = useState(false);
+    const [isTiming, setIsTiming] = useState(false);
     const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
     const stateRef = useRef([] as Array<SoundType>);
 
     const timerModalRef = useRef<Modalize>(null);
     const volumeModalRef = useRef<Modalize>(null);
+
+    const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
+    const statusBarColor = isDarkMode ? '#252525' : 'white';
+    const containerTheme = isDarkMode ? GlobalStyles.darkThemeContainer : GlobalStyles.lightThemeContainer;
 
     useEffect(() => {
         async function loadSounds() {
@@ -76,22 +80,22 @@ export default function HomeScreen() {
             newSoundsForStorage.push(newSound);
         });
 
-        stateRef.current = sounds;            
-        setSoundsForStorage(newSoundsForStorage);        
+        stateRef.current = sounds;
+        setSoundsForStorage(newSoundsForStorage);
 
     }, [sounds]);
 
     useEffect(() => {
 
-        if (isDarkMode) {            
+        if (isDarkMode) {
             AsyncStorage.setItem("theme", "true", (err) => {
-                if(err)
+                if (err)
                     console.error("error in setting theme " + err);
             });
         }
         else {
             AsyncStorage.setItem("theme", "false", (err) => {
-                if(err)
+                if (err)
                     console.error("error in setting theme " + err);
             });
         }
@@ -123,12 +127,12 @@ export default function HomeScreen() {
         setTimerLength(formatTimeLeft(countDownLength));
 
         if (countDownLength > 1 && !isTiming) {
-            setisTiming(true);
+            setIsTiming(true);
             let interval = setInterval(countDown, 1000);
             setIntervalVar(interval);
         }
         else if (countDownLength == 0 && isTiming) {
-            setisTiming(false);
+            setIsTiming(false);
             clearInterval(intervalVar);
             fadeAllSounds();
         }
@@ -145,7 +149,7 @@ export default function HomeScreen() {
 
     const pauseAllSounds = () => {
         let newSounds = stateRef.current;
-        
+
         newSounds.map(sound => {
             if (sound.isPlaying) {
                 sound.soundObject.pause(() => {
@@ -161,7 +165,7 @@ export default function HomeScreen() {
     const play = () => {
 
         let newSounds = stateRef.current
-        
+
         newSounds.map(sound => {
             if (sound.wasPlaying) {
                 sound.soundObject.play();
@@ -333,8 +337,6 @@ export default function HomeScreen() {
                 }
             });
         });
-
-
     };
 
     const changeVolumeOfSound = (sound: any, volume: number) => {
@@ -351,7 +353,6 @@ export default function HomeScreen() {
                 setSounds(newSounds);
             });
         }
-
     }
 
     const playSound = async (tileName: string) => {
@@ -391,15 +392,10 @@ export default function HomeScreen() {
         });
     }
 
-    const statusBarStyle = isDarkMode ? 'light-content' : 'dark-content';
-    const statusBarColor = isDarkMode ? '#252525' : 'white';
-    const containerTheme = isDarkMode ? GlobalStyles.darkThemeContainer : GlobalStyles.lightThemeContainer;
-
     const renderTile = (tile: any) => {
 
         const sound = sounds.find(sound => sound.name === tile.item.name);
-        
-        //todo, leaf and tree icons use the same sounds atm
+
         if (sound) {
             return (
                 <SoundTile name={tile.item.name} isDarkMode={isDarkMode}
@@ -412,7 +408,7 @@ export default function HomeScreen() {
             )
         }
         else {
-            return (<ActivityIndicator />)
+            return <ActivityIndicator />
         }
     };
 
@@ -421,7 +417,7 @@ export default function HomeScreen() {
             <SafeAreaView style={[containerTheme, styles.container]}>
                 <StatusBar barStyle={statusBarStyle} backgroundColor={statusBarColor} />
 
-                <View style={{ flex: 1, paddingTop: 20 }}>
+                <View style={styles.soundsContainer}>
                     {
                         loadedAudioFiles &&
                         <FlatList
@@ -478,7 +474,6 @@ export default function HomeScreen() {
             </Modalize>
         </>
     );
-
 }
 
 const styles = StyleSheet.create({
@@ -496,6 +491,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.2)',
         flex: 1,
         justifyContent: 'flex-end',
+    },
+    soundsContainer: {
+        flex: 1,
+        paddingTop: 20
     }
 });
 
