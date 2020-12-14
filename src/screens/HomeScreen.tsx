@@ -15,8 +15,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function HomeScreen() {
 
     const [isDarkMode, setIsDarkMode] = useState(false);
-    const [isTimerModalVisible, setIsTimerModalVisible] = useState(false);
-    const [isVolumeModalVisible, setIsVolumeModalVisible] = useState(false);
     const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
     const [sounds, setSounds] = useState([] as Array<SoundType>);
     const [soundsForStorage, setSoundsForStorage] = useState([] as Array<SoundsForStorageType>);
@@ -76,7 +74,8 @@ export default function HomeScreen() {
         let newSoundsForStorage: Array<SoundsForStorageType> = [];
 
         sounds.map((sound) => {
-            const newSound = { name: sound.name, isPlaying: sound.isPlaying } as SoundsForStorageType;
+            const newSound = { name: sound.name, isPlaying: sound.isPlaying, 
+                volume: sound.soundObject.getVolume() } as SoundsForStorageType;
             newSoundsForStorage.push(newSound);
         });
 
@@ -259,6 +258,7 @@ export default function HomeScreen() {
                 whoosh.setVolume(0.5);
 
                 if (sound.isPlaying) {
+                    whoosh.setVolume(sound.volume);
                     whoosh.play();
                     let newSound = {
                         "name": sound.name, "soundObject": whoosh,
@@ -315,10 +315,6 @@ export default function HomeScreen() {
             });
         });
     };
-
-    const changeVolumeOfSound = (sound: any, volume: number) => {
-        sound.soundObject.setVolume(volume)
-    }
 
     const setUpMusicControls = async () => {
 
@@ -403,8 +399,6 @@ export default function HomeScreen() {
                 modalStyle={containerTheme}>
                 <TimerBottomSheet
                     isDarkMode={isDarkMode}
-                    isVisible={isTimerModalVisible}
-                    setIsModalVisible={setIsTimerModalVisible}
                     setTimerLength={setTimerLength}
                     timerLength={timerLength}
                     startTimer={startTimer}
@@ -419,10 +413,8 @@ export default function HomeScreen() {
                 modalStyle={containerTheme}>
                 <VolumeBottomSheet
                     isDarkMode={isDarkMode}
-                    isVisible={isVolumeModalVisible}
-                    setIsModalVisible={setIsVolumeModalVisible}
                     sounds={sounds}
-                    changeVolumeOfSound={changeVolumeOfSound}
+                    setSounds={setSounds}
                 />
             </Modalize>
         </>
@@ -470,5 +462,6 @@ type SoundType = {
 
 type SoundsForStorageType = {
     name: string,
-    isPlaying: boolean
+    isPlaying: boolean,
+    volume: number
 }

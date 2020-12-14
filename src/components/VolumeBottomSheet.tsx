@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import Slider from '@react-native-community/slider';
 
 const VolumeBottomSheet = (props: any) => {
 
-    const { isDarkMode } = props;
+    const { isDarkMode, sounds, setSounds } = props;
+    const [calledWithinCoolDown, setCalledWithinCoolDown] = useState(false);
+
+    const containerBackgroundColor = isDarkMode ?
+        GlobalStyles.darkThemeModalContainer : GlobalStyles.lightThemeModalContainer;
+    const textColor = isDarkMode ? "white" : "black";
 
     const noSoundsPlaying = () => {
         let soundPlaying = false;
 
-        props.sounds.map((sound: any) => {
+        sounds.map((sound: any) => {
             if (sound.soundObject._playing) {
                 soundPlaying = true;
             }
@@ -19,9 +24,36 @@ const VolumeBottomSheet = (props: any) => {
         return !soundPlaying;
     }
 
-    const containerBackgroundColor = isDarkMode ?
-        GlobalStyles.darkThemeModalContainer : GlobalStyles.lightThemeModalContainer;
-    const textColor = isDarkMode ? "white" : "black";
+    const changeVolumeOfSound = async (sound: any, volume: number) => {
+
+        let newSounds = [...sounds];
+        let foundSound = newSounds.find(soundInArr => sound.name === soundInArr.name);
+        
+        if(!foundSound){
+            return;
+        }
+
+        if(calledWithinCoolDown){
+            sound.soundObject.setVolume(volume);
+            // cool down period so state is only set after 1 second
+            // this eliminates lag on the volume slider
+            setCalledWithinCoolDown(true);
+            delay(1000).then(() =>
+                setCalledWithinCoolDown(false)
+            );
+        }
+        else {            
+            setSounds(newSounds);
+            setCalledWithinCoolDown(true);
+        }
+
+    }
+
+    function delay(ms: number) {
+        return new Promise(resolve => {
+            setTimeout(resolve, ms);
+        });
+    }
 
     return (
         <SafeAreaView style={[styles.overlay, containerBackgroundColor]}>
@@ -32,7 +64,7 @@ const VolumeBottomSheet = (props: any) => {
                         <Text style={{ color: textColor, fontSize: 18 }}>play some sounds!</Text>
                     </View>
                 }
-                {props.sounds.map((sound: any) => {
+                {sounds.map((sound: any) => {
                     if (sound.soundObject._playing) {
                         return (
                             <View key={sound.name} style={{
@@ -47,7 +79,7 @@ const VolumeBottomSheet = (props: any) => {
                                     value={sound.soundObject.getVolume()}
                                     minimumTrackTintColor="#000000"
                                     maximumTrackTintColor="#FFFFFF"
-                                    onValueChange={(value) => props.changeVolumeOfSound(sound, value)}
+                                    onValueChange={(value) => changeVolumeOfSound(sound, value)}
                                 />
                             </View>
                         )
