@@ -15,7 +15,7 @@ Noisy is a background noise generator designed to be simple and intuitive.
 
 Moving from Android to ios I found that there were no good free noise generators that mimicked what I had on Android. 
 
-I wanted to build a free app that anyone could use, thus Noisy waws born! 
+I wanted to build a free app that anyone could use, thus Noisy was born. 
 
 ## Tech
 
@@ -32,5 +32,3 @@ The whole app is written with functional hooks.
 The icons are from React-Native-Vector-Icons.
 
 The sounds files are all from [freesound](https://freesound.org/). 
-
-Thanks for looking at my app!
