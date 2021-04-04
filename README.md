@@ -11,12 +11,6 @@ Noisy is a background noise generator designed to be simple and intuitive.
     </kbd>
 </p>
 
-## Motivation
-
-Moving from Android to ios I found that there were no good free noise generators that mimicked what I had on Android. 
-
-I wanted to build a free app that anyone could use, thus Noisy was born. 
-
 ## Tech
 
 This is all written in TypeScript using the React Native framework.
@@ -25,7 +19,11 @@ The motivation behind React Native is that I wanted the application to be cross 
 
 I went for React Native so that I could also sharpen my web-dev skills at the same time as building a fun app. 
 
-The whole app is written with functional hooks.
+## Motivation
+
+Moving from Android to ios I found that there were no good free noise generators that mimicked what I had on Android. 
+
+I wanted to build a free app that anyone could use, thus Noisy was born. 
 
 ## Assets 
 
