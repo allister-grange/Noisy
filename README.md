@@ -23,7 +23,7 @@ I went for React Native so that I could also sharpen my web-dev skills at the sa
 
 Moving from Android to ios I found that there were no good free noise generators that mimicked what I had on Android. 
 
-I wanted to build a free app that anyone could use, thus Noisy was born. 
+I wanted to build a free app that anyone could use, thus Noisy was born. I literally use this every night to go to sleep to lol.
 
 ## Assets 
 
