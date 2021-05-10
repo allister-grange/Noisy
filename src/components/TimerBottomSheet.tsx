@@ -107,35 +107,33 @@ const TimerBottomSheet = (props: any) => {
               seconds
             </Text>
           </View>
+        </View>
 
+        <View style={styles.timerButtonContainer}>
           {isTiming ? (
-            <View style={styles.timerButtonContainer}>
-              <TouchableOpacity
-                style={{width: '15%', height: '100%'}}
-                onPress={resetTimer}>
-                <Text
-                  style={[
-                    styles.timerText,
-                    {color: textColor, borderColor: borderColor},
-                  ]}>
-                  stop
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={{width: '15%', height: '100%'}}
+              onPress={resetTimer}>
+              <Text
+                style={[
+                  styles.timerText,
+                  {color: textColor, borderColor: borderColor},
+                ]}>
+                stop
+              </Text>
+            </TouchableOpacity>
           ) : (
-            <View style={styles.timerButtonContainer}>
-              <TouchableOpacity
-                style={{width: '15%', height: '100%'}}
-                onPress={startTimer}>
-                <Text
-                  style={[
-                    styles.timerText,
-                    {color: textColor, borderColor: borderColor},
-                  ]}>
-                  set
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={{width: '15%', height: '100%'}}
+              onPress={startTimer}>
+              <Text
+                style={[
+                  styles.timerText,
+                  {color: textColor, borderColor: borderColor},
+                ]}>
+                set
+              </Text>
+            </TouchableOpacity>
           )}
         </View>
       </View>

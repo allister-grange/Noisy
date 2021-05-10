@@ -65,11 +65,11 @@ export const tileData = [
   },
   {
     id: 9,
-    iconName: 'kiwi-bird',
+    iconName: 'fan',
     darkThemeColor: '#FF968A',
     lightThemeColor: '#FF968A',
     isPlaying: false,
-    name: 'leaf',
+    name: 'fan',
   },
   {
     id: 10,
@@ -89,11 +89,11 @@ export const tileData = [
   },
   {
     id: 12,
-    iconName: 'fan',
+    iconName: 'leaf',
     darkThemeColor: '#00CDAC',
     lightThemeColor: '#00CDAC',
     isPlaying: false,
-    name: 'fan',
+    name: 'leaf',
   },
   {
     id: 13,
