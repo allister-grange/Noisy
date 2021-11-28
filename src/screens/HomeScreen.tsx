@@ -20,9 +20,10 @@ import {Modalize} from 'react-native-modalize';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import MusicControl, {Command} from 'react-native-music-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useTheme} from '../helpers/useTheme';
 
 export default function HomeScreen() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const {isDarkMode, setIsDarkMode} = useTheme();
   const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
   const [sounds, setSounds] = useState([] as Array<SoundType>);
   const [soundsForStorage, setSoundsForStorage] = useState(
@@ -66,19 +67,6 @@ export default function HomeScreen() {
       }
     }
 
-    async function loadDarkTheme() {
-      try {
-        const value = await AsyncStorage.getItem('theme');
-
-        if (value !== null) {
-          setIsDarkMode(value == 'true');
-        }
-      } catch (error) {
-        console.error('No sounds in storage');
-      }
-    }
-
-    loadDarkTheme();
     loadSounds();
   }, []);
 
