@@ -20,5 +20,21 @@ export const useTheme = () => {
     loadDarkTheme();
   }, []);
 
+  useEffect(() => {
+    if (isDarkMode) {
+      AsyncStorage.setItem('theme', 'true', (err) => {
+        if (err) {
+          console.error('error in setting theme ' + err);
+        }
+      });
+    } else {
+      AsyncStorage.setItem('theme', 'false', (err) => {
+        if (err) {
+          console.error('error in setting theme ' + err);
+        }
+      });
+    }
+  }, [isDarkMode]);
+
   return {isDarkMode, setIsDarkMode};
 };

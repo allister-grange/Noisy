@@ -7,6 +7,7 @@ import {
   StatusBar,
   ActivityIndicator,
   Platform,
+  Dimensions,
 } from 'react-native';
 import GlobalStyles from '../styles/GlobalStyles';
 import ToolBar from '../components/ToolBar';
@@ -21,14 +22,17 @@ import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import MusicControl, {Command} from 'react-native-music-control';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useTheme} from '../helpers/useTheme';
+import {CountDown, Dictionary, SoundsForStorageType, SoundType} from '../types';
+import {setUpMusicControls} from '../helpers/musicControl';
+import {useSounds} from '../helpers/useSounds';
 
 export default function HomeScreen() {
   const {isDarkMode, setIsDarkMode} = useTheme();
-  const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
-  const [sounds, setSounds] = useState([] as Array<SoundType>);
-  const [soundsForStorage, setSoundsForStorage] = useState(
-    [] as Array<SoundsForStorageType>,
-  );
+  // const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
+  // const [sounds, setSounds] = useState([] as Array<SoundType>);
+  // const [soundsForStorage, setSoundsForStorage] = useState(
+  //   [] as Array<SoundsForStorageType>,
+  // );
   const [timerLength, setTimerLength] = useState({
     hours: 0,
     minutes: 0,
@@ -38,6 +42,7 @@ export default function HomeScreen() {
   const [isTiming, setIsTiming] = useState(false);
   const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
   const stateRef = useRef([] as Array<SoundType>);
+  const {sounds, loadedAudioFiles, setSounds} = useSounds(play, pause);
 
   const timerModalRef = useRef<Modalize>(null);
   const volumeModalRef = useRef<Modalize>(null);
@@ -48,70 +53,54 @@ export default function HomeScreen() {
     ? GlobalStyles.darkThemeContainer
     : GlobalStyles.lightThemeContainer;
 
-  useEffect(() => {
-    async function loadSounds() {
-      try {
-        const value = await AsyncStorage.getItem('sounds');
+  // useEffect(() => {
+  //   async function loadSounds() {
+  //     try {
+  //       const value = await AsyncStorage.getItem('sounds');
 
-        if (value !== null) {
-          if (value.length === 2) {
-            loadSoundFilesFirstTime();
-          } else {
-            loadSoundFilesFromFile(JSON.parse(value));
-          }
-        } else {
-          loadSoundFilesFirstTime();
-        }
-      } catch (error) {
-        console.error('No sounds in storage');
-      }
-    }
+  //       if (value !== null) {
+  //         if (value.length === 2) {
+  //           loadSoundFilesFirstTime();
+  //         } else {
+  //           loadSoundFilesFromFile(JSON.parse(value));
+  //         }
+  //       } else {
+  //         loadSoundFilesFirstTime();
+  //       }
+  //     } catch (error) {
+  //       console.error('No sounds in storage');
+  //     }
+  //   }
 
-    loadSounds();
-  }, []);
+  //   loadSounds();
+  // }, []);
 
-  useEffect(() => {
-    let newSoundsForStorage: Array<SoundsForStorageType> = [];
+  // useEffect(() => {
+  //   let newSoundsForStorage: Array<SoundsForStorageType> = [];
 
-    sounds.map((sound) => {
-      const newSound = {
-        name: sound.name,
-        isPlaying: sound.isPlaying,
-        volume: sound.soundObject.getVolume(),
-      } as SoundsForStorageType;
-      newSoundsForStorage.push(newSound);
-    });
+  //   sounds.map((sound) => {
+  //     const newSound = {
+  //       name: sound.name,
+  //       isPlaying: sound.isPlaying,
+  //       volume: sound.soundObject.getVolume(),
+  //     } as SoundsForStorageType;
+  //     newSoundsForStorage.push(newSound);
+  //   });
 
-    stateRef.current = sounds;
-    setSoundsForStorage(newSoundsForStorage);
-  }, [sounds]);
+  //   stateRef.current = sounds;
+  //   setSoundsForStorage(newSoundsForStorage);
+  // }, [sounds]);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      AsyncStorage.setItem('theme', 'true', (err) => {
-        if (err) {
-          console.error('error in setting theme ' + err);
-        }
-      });
-    } else {
-      AsyncStorage.setItem('theme', 'false', (err) => {
-        if (err) {
-          console.error('error in setting theme ' + err);
-        }
-      });
-    }
-  }, [isDarkMode]);
-
-  useEffect(() => {
-    AsyncStorage.setItem('sounds', JSON.stringify(soundsForStorage), (err) => {
-      if (err) {
-        console.log('an error');
-        throw err;
-      }
-    }).catch((err) => {
-      console.log('error is: ' + err);
-    });
-  }, [soundsForStorage]);
+  // useEffect(() => {
+  //   AsyncStorage.setItem('sounds', JSON.stringify(soundsForStorage), (err) => {
+  //     if (err) {
+  //       console.log('an error');
+  //       throw err;
+  //     }
+  //   }).catch((err) => {
+  //     console.log('error is: ' + err);
+  //   });
+  // }, [soundsForStorage]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -234,109 +223,92 @@ export default function HomeScreen() {
   const countDown = () =>
     setCountDownLength((countDownLength) => countDownLength - 1);
 
-  const loadSoundFilesFromFile = (
-    soundSettingsFromStorage: Array<SoundsForStorageType>,
-  ) => {
-    setLoadedAudioFiles(false);
+  // const loadSoundFilesFromFile = (
+  //   soundSettingsFromStorage: Array<SoundsForStorageType>,
+  // ) => {
+  //   setLoadedAudioFiles(false);
 
-    const soundFilesPath: Dictionary<any> = loadAudioFromFile();
-    let newSounds: Array<SoundType> = [];
+  //   const soundFilesPath: Dictionary<any> = loadAudioFromFile();
+  //   let newSounds: Array<SoundType> = [];
 
-    soundSettingsFromStorage.map((sound: SoundsForStorageType, idx) => {
-      let whoosh: Sound = new Sound(soundFilesPath[sound.name], (error) => {
-        if (error) {
-          console.log('failed to load the sound', error);
-          return;
-        }
+  //   console.log(
+  //     'Total sounds loaded from storage: ',
+  //     soundSettingsFromStorage.length,
+  //   );
 
-        whoosh.setNumberOfLoops(-1);
-        whoosh.setVolume(0.5);
+  //   soundSettingsFromStorage.forEach((sound: SoundsForStorageType, idx) => {
+  //     let whoosh: Sound = new Sound(soundFilesPath[sound.name], (error) => {
+  //       if (error) {
+  //         console.log('failed to load the sound', error);
+  //         return;
+  //       }
 
-        if (sound.isPlaying) {
-          whoosh.setVolume(sound.volume);
-          whoosh.play();
-          let newSound = {
-            name: sound.name,
-            soundObject: whoosh,
-            wasPlaying: true,
-            isPlaying: true,
-          };
-          newSounds.push(newSound);
-        } else {
-          let newSound = {
-            name: sound.name,
-            soundObject: whoosh,
-            wasPlaying: false,
-            isPlaying: false,
-          };
-          newSounds.push(newSound);
-        }
+  //       whoosh.setNumberOfLoops(-1);
+  //       whoosh.setVolume(0.5);
 
-        if (idx == soundSettingsFromStorage.length - 1) {
-          setSounds(newSounds);
-          setLoadedAudioFiles(true);
-          setUpMusicControls();
-        }
-      });
-    });
-  };
+  //       if (sound.isPlaying) {
+  //         whoosh.setVolume(sound.volume);
+  //         whoosh.play();
+  //         let newSound = {
+  //           name: sound.name,
+  //           soundObject: whoosh,
+  //           wasPlaying: true,
+  //           isPlaying: true,
+  //         };
+  //         newSounds.push(newSound);
+  //       } else {
+  //         let newSound = {
+  //           name: sound.name,
+  //           soundObject: whoosh,
+  //           wasPlaying: false,
+  //           isPlaying: false,
+  //         };
+  //         newSounds.push(newSound);
+  //       }
 
-  const loadSoundFilesFirstTime = async () => {
-    setLoadedAudioFiles(false);
+  //       if (idx === soundSettingsFromStorage.length - 1) {
+  //         setSounds(newSounds);
+  //         setLoadedAudioFiles(true);
+  //         setUpMusicControls(play, pause);
+  //       }
+  //     });
+  //   });
+  // };
 
-    const soundFilesPath: Dictionary<any> = loadAudioFromFile();
-    let newSounds: Array<SoundType> = [];
+  // const loadSoundFilesFirstTime = async () => {
+  //   setLoadedAudioFiles(false);
 
-    tileData.forEach((tile, idx) => {
-      let whoosh: Sound = new Sound(soundFilesPath[tile.name], (error) => {
-        if (error) {
-          console.log('failed to load the sound', error);
-          return;
-        }
+  //   const soundFilesPath: Dictionary<any> = loadAudioFromFile();
+  //   let newSounds: Array<SoundType> = [];
 
-        whoosh.setNumberOfLoops(-1);
-        whoosh.setVolume(0.5);
-        let newSound = {
-          name: tile.name,
-          soundObject: whoosh,
-          wasPlaying: false,
-          isPlaying: false,
-        };
+  //   tileData.forEach((tile, idx) => {
+  //     let whoosh: Sound = new Sound(soundFilesPath[tile.name], (error) => {
+  //       if (error) {
+  //         console.log('failed to load the sound', error);
+  //         return;
+  //       }
 
-        newSounds.push(newSound);
+  //       whoosh.setNumberOfLoops(-1);
+  //       whoosh.setVolume(0.5);
+  //       let newSound = {
+  //         name: tile.name,
+  //         soundObject: whoosh,
+  //         wasPlaying: false,
+  //         isPlaying: false,
+  //       };
 
-        if (idx == tileData.length - 1) {
-          setSounds(newSounds);
-          setLoadedAudioFiles(true);
-          setUpMusicControls();
-        }
-      });
-    });
-  };
+  //       newSounds.push(newSound);
 
-  const setUpMusicControls = async () => {
-    if (Platform.OS === 'ios') {
-      MusicControl.handleAudioInterruptions(true);
-    }
+  //       console.log('newSounds', newSounds.length);
 
-    MusicControl.enableBackgroundMode(true);
-
-    MusicControl.on(Command.play, play);
-    MusicControl.on(Command.pause, pause);
-
-    MusicControl.enableControl('play', true);
-    MusicControl.enableControl('pause', true);
-
-    MusicControl.setNowPlaying({
-      title: 'noisy',
-      artwork: require('./../../assets/1024.png'),
-      artist: 'noisy',
-    });
-
-    MusicControl.updatePlayback({
-      state: MusicControl.STATE_PLAYING,
-    });
-  };
+  //       if (idx === tileData.length - 1) {
+  //         setSounds(newSounds);
+  //         setLoadedAudioFiles(true);
+  //         setUpMusicControls(play, pause);
+  //       }
+  //     });
+  //   });
+  // };
 
   const renderTile = (tile: any) => {
     const sound = sounds.find((sound) => sound.name === tile.item.name);
@@ -355,7 +327,11 @@ export default function HomeScreen() {
         />
       );
     } else {
-      return <ActivityIndicator />;
+      return (
+        <View style={styles.loadingTileIndicator}>
+          <ActivityIndicator />
+        </View>
+      );
     }
   };
 
@@ -438,27 +414,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
   },
+  loadingTileIndicator: {
+    width: Dimensions.get('window').width / 3.75,
+    height: Dimensions.get('window').height / 9,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+    margin: 10,
+  },
 });
-
-interface Dictionary<T> {
-  [Key: string]: T;
-}
-
-type CountDown = {
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
-
-type SoundType = {
-  name: string;
-  soundObject: Sound;
-  wasPlaying: boolean;
-  isPlaying: boolean;
-};
-
-type SoundsForStorageType = {
-  name: string;
-  isPlaying: boolean;
-  volume: number;
-};
