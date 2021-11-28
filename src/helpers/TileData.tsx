@@ -53,7 +53,7 @@ export const tileData = [
     darkThemeColor: '#F3B0C3',
     lightThemeColor: '#F3B0C3',
     isPlaying: false,
-    name: 'blackNoise',
+    name: 'ominous',
   },
   {
     id: 8,
@@ -61,7 +61,7 @@ export const tileData = [
     darkThemeColor: '#6BE5FF',
     lightThemeColor: '#6BE5FF',
     isPlaying: false,
-    name: 'oceanWaves',
+    name: 'ocean',
   },
   {
     id: 9,
@@ -93,7 +93,7 @@ export const tileData = [
     darkThemeColor: '#00CDAC',
     lightThemeColor: '#00CDAC',
     isPlaying: false,
-    name: 'leaf',
+    name: 'birds',
   },
   {
     id: 13,
@@ -154,7 +154,7 @@ export const loadAudioFromFile: any = () => {
     forest: require('../../assets/sounds/forest.mp3'),
     grass: require('../../assets/sounds/grass.mp3'),
     guitar: require('../../assets/sounds/guitar.mp3'),
-    leaf: require('../../assets/sounds/leaf.mp3'),
+    birds: require('../../assets/sounds/birds.mp3'),
     office: require('../../assets/sounds/office.mp3'),
     piano: require('../../assets/sounds/piano.mp3'),
     rain: require('../../assets/sounds/rain.mp3'),
@@ -163,7 +163,7 @@ export const loadAudioFromFile: any = () => {
     train: require('../../assets/sounds/train.mp3'),
     white: require('../../assets/sounds/white.mp3'),
     wind: require('../../assets/sounds/wind.mp3'),
-    oceanWaves: require('../../assets/sounds/oceanWaves.mp3'),
-    blackNoise: require('../../assets/sounds/blackNoise.mp3'),
+    ocean: require('../../assets/sounds/ocean.mp3'),
+    ominous: require('../../assets/sounds/ominous.mp3'),
   };
 };

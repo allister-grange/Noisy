@@ -54,7 +54,7 @@ const SoundTile = (props: any) => {
 
   useEffect(() => {
     setIsPlaying(soundPlaying);
-  }, [props]);
+  }, [soundPlaying]);
 
   const playSound = async (tileName: string) => {
     let newSounds = [...sounds];

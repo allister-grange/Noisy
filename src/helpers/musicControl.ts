@@ -37,6 +37,8 @@ export const loadSoundFilesFromFile = async (
   const soundFilesPath: Dictionary<any> = loadAudioFromFile();
   let newSounds: Array<SoundType> = [];
 
+  soundSettingsFromStorage.forEach((sound) => console.log(sound));
+
   const soundDataLoading = new Promise((resolve) => {
     soundSettingsFromStorage.forEach((sound: SoundsForStorageType, idx) => {
       let whoosh: Sound = new Sound(soundFilesPath[sound.name], (error) => {

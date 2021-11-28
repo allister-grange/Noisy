@@ -15,9 +15,8 @@ export const useSounds = (play: () => void, pause: () => void) => {
     async function loadSounds() {
       try {
         setLoadedAudioFiles(false);
+        await AsyncStorage.clear();
         const value = await AsyncStorage.getItem('sounds');
-
-        console.log(value?.length);
 
         if (value !== null) {
           if (value.length === 2) {
