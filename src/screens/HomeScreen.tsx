@@ -9,7 +9,6 @@ import {
   View,
 } from 'react-native';
 import {Modalize} from 'react-native-modalize';
-import MusicControl from 'react-native-music-control';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import SoundTile from '../components/SoundTile';
 import TimerBottomSheet from '../components/TimerBottomSheet';
@@ -31,8 +30,7 @@ export default function HomeScreen() {
   const [countDownLength, setCountDownLength] = useState(0);
   const [isTiming, setIsTiming] = useState(false);
   const [intervalVar, setIntervalVar] = useState({} as NodeJS.Timeout);
-  const stateRef = useRef([] as Array<SoundType>);
-  const {sounds, loadedAudioFiles, setSounds} = useSounds(play, pause);
+  const {sounds, loadedAudioFiles, setSounds} = useSounds();
 
   const timerModalRef = useRef<Modalize>(null);
   const volumeModalRef = useRef<Modalize>(null);
@@ -69,47 +67,6 @@ export default function HomeScreen() {
         triggerFadeOut(sound, 20);
       }
     });
-
-  const pauseAllSounds = () => {
-    let newSounds = stateRef.current;
-
-    newSounds.map((sound) => {
-      if (sound.isPlaying) {
-        sound.soundObject.pause(() => {
-          sound.wasPlaying = true;
-          sound.isPlaying = false;
-        });
-      }
-    });
-
-    setSounds(newSounds);
-  };
-
-  const play = () => {
-    let newSounds = stateRef.current;
-
-    newSounds.map((sound) => {
-      if (sound.wasPlaying) {
-        sound.soundObject.play();
-        sound.wasPlaying = false;
-        sound.isPlaying = true;
-      }
-    });
-
-    setSounds(newSounds);
-
-    MusicControl.updatePlayback({
-      state: MusicControl.STATE_PLAYING,
-    });
-  };
-
-  const pause = () => {
-    pauseAllSounds();
-
-    MusicControl.updatePlayback({
-      state: MusicControl.STATE_PAUSED,
-    });
-  };
 
   const triggerFadeOut = async (sound: SoundType, count: number) => {
     if (count === 0) {

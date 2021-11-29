@@ -1,5 +1,6 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {AsyncStorage} from 'react-native';
+import MusicControl from 'react-native-music-control';
 import {SoundType} from '../types';
 import {
   loadSoundFilesFirstTime,
@@ -7,27 +8,77 @@ import {
   setUpMusicControls,
 } from './musicControl';
 
-export const useSounds = (play: () => void, pause: () => void) => {
-  const [sounds, setSounds] = useState([] as Array<SoundType>);
+export const useSounds = () => {
+  const [sounds, setSoundsState] = useState([] as Array<SoundType>);
   const [loadedAudioFiles, setLoadedAudioFiles] = useState(false);
+  const soundsRef = useRef([] as Array<SoundType>);
+
+  const setSounds = (soundsToSet: Array<SoundType>) => {
+    setSoundsState(soundsToSet);
+    soundsRef.current = soundsToSet;
+  };
+
+  const pauseAllSounds = useCallback(() => {
+    let newSounds = soundsRef.current;
+
+    newSounds.map((sound) => {
+      if (sound.isPlaying) {
+        sound.soundObject.pause(() => {
+          sound.wasPlaying = true;
+          sound.isPlaying = false;
+        });
+      }
+    });
+
+    setSounds(newSounds);
+
+    MusicControl.updatePlayback({
+      state: MusicControl.STATE_PAUSED,
+    });
+  }, []);
+
+  const playAllSounds = useCallback(() => {
+    let newSounds = soundsRef.current;
+
+    newSounds.map((sound) => {
+      if (sound.wasPlaying) {
+        sound.soundObject.play();
+        sound.wasPlaying = false;
+        sound.isPlaying = true;
+      }
+    });
+
+    setSounds(newSounds);
+
+    MusicControl.updatePlayback({
+      state: MusicControl.STATE_PLAYING,
+    });
+  }, []);
 
   useEffect(() => {
     async function loadSounds() {
       try {
         setLoadedAudioFiles(false);
-        await AsyncStorage.clear();
         const value = await AsyncStorage.getItem('sounds');
 
         if (value !== null) {
           if (value.length === 2) {
-            setSounds(await loadSoundFilesFirstTime());
+            const soundsFromFiles = await loadSoundFilesFirstTime();
+            setSounds(soundsFromFiles);
+            soundsRef.current = soundsFromFiles;
           } else {
-            setSounds(await loadSoundFilesFromFile(JSON.parse(value)));
+            const soundsFromFiles = await loadSoundFilesFromFile(
+              JSON.parse(value),
+            );
+            setSounds(soundsFromFiles);
+            soundsRef.current = soundsFromFiles;
           }
         } else {
-          setSounds(await loadSoundFilesFirstTime());
+          const soundsFromFiles = await loadSoundFilesFirstTime();
+          setSounds(soundsFromFiles);
+          soundsRef.current = soundsFromFiles;
         }
-        setUpMusicControls(play, pause);
+        setUpMusicControls(playAllSounds, pauseAllSounds);
         setLoadedAudioFiles(true);
       } catch (error) {
         console.error('No sounds in storage');
@@ -35,7 +86,7 @@ export const useSounds = (play: () => void, pause: () => void) => {
     }
 
     loadSounds();
-  }, [pause, play]);
+  }, [pauseAllSounds, playAllSounds]);
 
   useEffect(() => {
     const newSoundsForStorage = sounds.map((sound) => {
