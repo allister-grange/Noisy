@@ -52,7 +52,11 @@ export const loadSoundFilesFromFile = async (
 
         if (sound.isPlaying) {
           whoosh.setVolume(sound.volume);
-          whoosh.play();
+          whoosh.play((success: any) => {
+            if (!success) {
+              console.log('Sound did not play');
+            }
+          });
           let newSound = {
             name: sound.name,
             soundObject: whoosh,

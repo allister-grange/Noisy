@@ -42,7 +42,11 @@ export const useSounds = () => {
 
     newSounds.map((sound) => {
       if (sound.wasPlaying) {
-        sound.soundObject.play();
+        sound.soundObject.play((success: any) => {
+          if (!success) {
+            console.log('Sound did not play');
+          }
+        });
         sound.wasPlaying = false;
         sound.isPlaying = true;
       }

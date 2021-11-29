@@ -62,7 +62,11 @@ const SoundTile = (props: any) => {
 
     if (sound) {
       sound.isPlaying = true;
-      sound.soundObject.play();
+      sound.soundObject.play((success: any) => {
+        if (!success) {
+          console.log('Sound did not play');
+        }
+      });
     }
 
     setSounds(newSounds);
